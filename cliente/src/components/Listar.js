@@ -47,16 +47,11 @@ const ListarDados = () => {
         return lista.reduce((total, dado) => total + parseFloat(dado.valor), 0).toFixed(2);
     };
 
-    //   // Função para calcular o total dos valores com a categoria "gastos"
-    //   const calcularTotalGastos = () => {
-    //     const gastos = dados.filter(dado => dado.categoria === 'Gastos');
-    //     return gastos.reduce((total, dado) => total + parseFloat(dado.valor), 0).toFixed(2);
-    // };
-
-    return (
-        <Fragment>
-            <div className="List">
-            <div className="List__gastos">
+     // Condição para exibir o elemento se dadosGastos não for vazio
+     let totalGastosElement = null;
+     if (dadosGastos.length > 0) {
+         totalGastosElement = 
+         <div className="List__gastos">
                 <h3>Gastos</h3>
                 <table className="table mt-5 text-center">
                     {/* ... (cabeçalho e corpo da tabela) */}
@@ -115,10 +110,15 @@ const ListarDados = () => {
                         }
                     </tbody>
                 </table>
-                <h5>Total Gastos: R${calcularTotal(dadosGastos)}</h5>
+                <h5>Total Gastos: R${calcularTotal(dadosGastos)}</h5>                
             </div>
+     }
 
-            <div className="List__ganhos">
+     // Condição para exibir o elemento se dadosGastos não for vazio
+     let totalGanhosElement = null;
+     if (dadosGanhos.length > 0) {
+         totalGanhosElement = 
+         <div className="List__ganhos">
                 <h3>Ganhos</h3>
                 <table className="table mt-5 text-center">
                     {/* ... (cabeçalho e corpo da tabela) */}
@@ -177,9 +177,21 @@ const ListarDados = () => {
                         }
                     </tbody>
                 </table>
-                <h5>Total Ganhos: R${calcularTotal(dadosGanhos)}</h5>
+                <h5>Total Gastos: R${calcularTotal(dadosGanhos)}</h5>
             </div>
-              
+     }
+
+    //   // Função para calcular o total dos valores com a categoria "gastos"
+    //   const calcularTotalGastos = () => {
+    //     const gastos = dados.filter(dado => dado.categoria === 'Gastos');
+    //     return gastos.reduce((total, dado) => total + parseFloat(dado.valor), 0).toFixed(2);
+    // };
+
+    return (
+        <Fragment>
+            <div className="List">
+                {totalGastosElement}
+                {totalGanhosElement}
             </div>
         </Fragment>
     )

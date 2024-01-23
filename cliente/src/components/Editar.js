@@ -140,7 +140,7 @@ const EditarDados = ({ dado }) => {// constante EditTodo = ({ parametro }) => (a
                                             onChange={e => definirSubcategoria(e.target.value)}
                                         />
                                     </div>
-                                    <div className='form-group'>
+                                    <div className='form-group'>'Insira a data da operação...'
                                         <label for={classe}>Classe:</label>
                                         <input type='text' 
                                             className='form-control' 
@@ -162,7 +162,7 @@ const EditarDados = ({ dado }) => {// constante EditTodo = ({ parametro }) => (a
                                         <label for={data_gregoriana}>Data gregoriana:</label>
                                         <input type='date' 
                                             className='form-control' 
-                                            placeholder='Insira a descrição...' 
+                                            placeholder='Insira a data da operação...' 
                                             value={data_gregoriana} 
                                             onChange={e => definirData_gregoriana(e.target.value)}
                                         />

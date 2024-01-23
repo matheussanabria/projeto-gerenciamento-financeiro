@@ -42,10 +42,23 @@ form,.List__ganhos,.List__gastos{
   max-width: 768px;
 }
 
+.List__ganhos,.List__gastos{
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+}
+
+.List__gastos h5{
+  /*padding-top: 15.5px;*/
+}
+
+.List__ganhos h5,.List__gastos h5{
+  margin: 0;
+}
+
 .d-flex{
   flex-direction: column;
-  gap: 10px!important;
-  margin: 10px auto!important;
+  gap: 20px;
 }
 
 .form-group label{
@@ -59,12 +72,15 @@ form,.List__ganhos,.List__gastos{
 }
 
 .Inserir{
-  padding: 15px 2%;
+  padding: 15px 0.5%;
 }
 
 h3,h5{
   text-align: center;
   background-color: white;
+}
+h4{
+  margin: 0;
 }
 
 .List{
@@ -75,7 +91,39 @@ h3,h5{
 }
 
 .List .table{
-  max-width: 367px;
+  max-width: 350px;
+}
+
+.List .mt-5{
+  margin: 0 0 10px 0!important;
+}
+
+.Editar form{
+  background-color:transparent;
+  padding: none;
+  border-radius: none;
+  box-shadow: none;
+  margin: none;
+  max-width: 768px;
+  text-align: left;
+}
+
+.Editar .d-flex{
+  margin: 0!important;
+  gap: 20px!important;
+  padding: 0;
+}
+
+.Editar .mt-5{
+  margin: 0;
+}
+
+button.close{
+  padding: 4px 6px 2px 6px;
+  border: 0;
+  background-color: #dc3545;
+  color: white;
+  font-weight: 700;
 }
 
 @media screen and (max-width: 480px) {
@@ -84,15 +132,34 @@ h3,h5{
   }
 
   .table th{
-    font-size: 0.7em;
+    font-size: 0.8em;
   }
   .table td{
-    font-size: 0.7em;
+    font-size: 0.8em;
+  }
+
+  .Editar .d-flex,.Inserir .d-flex{
+    gap: 12.5px!important;
   }
 }
 
 @media screen and (max-width: 767px) {
   .List{
-    flex-direction: column  ;
+    flex-direction: column;
+    margin: 0;
   }
+
+  .List__ganhos,.List__gastos{
+    align-self: auto;
+  }
+  
+  .List .table{
+    max-width: 768px;
+    width: 100%;
+  }
+
+  .List__gastos h5{
+    padding-top: 0;
+  }
+  
 }
