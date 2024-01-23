@@ -1,0 +1,98 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body{
+  height: 100%;
+}
+
+/* classes auxiliares */
+.centro{
+  /* max-width: 1080px; */
+  padding: 15px 2%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.mt-5{
+  margin: 0px auto 30px auto!important;
+}
+
+.table{
+  max-width: 768px;
+  margin: 0 auto;
+  border-top: 1px solid #dee2e6;
+}
+
+.table tr th, .table tr td{
+  vertical-align: middle;
+  padding: 8px 4px;
+}
+
+form,.List__ganhos,.List__gastos{
+  background-color:transparent;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 4px 1px 20px 1px #ccc;
+  margin: 0 5px 1rem 5px;
+  max-width: 768px;
+}
+
+.d-flex{
+  flex-direction: column;
+  gap: 10px!important;
+  margin: 10px auto!important;
+}
+
+.form-group label{
+  padding-bottom:3px;
+  text-align: left!important;
+  font-weight: 500;
+}
+
+.btn{
+  padding: 3px 6px;
+}
+
+.Inserir{
+  padding: 15px 2%;
+}
+
+h3,h5{
+  text-align: center;
+  background-color: white;
+}
+
+.List{
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.List .table{
+  max-width: 367px;
+}
+
+@media screen and (max-width: 480px) {
+  .table tr th, .table tr td{
+    padding: 4px;
+  }
+
+  .table th{
+    font-size: 0.7em;
+  }
+  .table td{
+    font-size: 0.7em;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .List{
+    flex-direction: column  ;
+  }
+}
