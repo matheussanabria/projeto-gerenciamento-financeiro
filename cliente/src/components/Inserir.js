@@ -9,16 +9,15 @@ const InserirDados = () => {
     const [subcategoria, definirSubcategoria] = useState('')
     const [classe, definirClasse] = useState('')
     const [subclasse, definirSubclasse] = useState('')
-    const [data_gregoriana, definirData_gregoriana] = useState('')
+    const [dataGregoriana, definirDataGregoriana] = useState('')
     // const [sincronario, definirSincronario] = useState('')
     // const [plasma, definirPlasma] = useState('')
     // const [heptal, definirHeptal] = useState('')
     // const [lua, definirLua] = useState('')
 
-
-
     const Enviar = async e => {
-        e.preventDefault()
+        e.preventDefault();
+
         try {
             const body = {
                 descricao,
@@ -29,22 +28,28 @@ const InserirDados = () => {
                 subcategoria,
                 classe,
                 subclasse,
-                data_gregoriana,
-                // sincronario,
-                // plasma,
-                // heptal,
-                // lua
+                dataGregoriana
             }
-            const resposta = await fetch('http://localhost:5000/financial-management', {
-                method: "POST",
-                headers: {"Content-Type":"application/json"},
-                body: JSON.stringify(body)
-            })
+    
+            const resposta = await fetch(`http://127.0.0.1:5001/gerenciador-financeiro/`, 
+                {
+                    method: "POST",
+                    headers: {"Content-Type":"application/json"},
+                    body: JSON.stringify(body)
+                }
+            )
+
+    
+            //console.log('Operação financeira adicionada com sucesso!');
             window.location = '/'
         } catch (error) {
             console.log(error)
         }
     }
+    
+
+    
+    
 
     return (
         <Fragment>
@@ -52,7 +57,7 @@ const InserirDados = () => {
                 <h1 className='text-center mt-5'>Adicionar operação financeira</h1>
                 <form className='d-flex mt-5' onSubmit={Enviar}>
                     <div className='form-group'>
-                        <label for={descricao}>Descrição:</label>
+                        <label htmlFor={descricao}>Descrição:</label>
                         <input type='text' 
                             className='form-control' 
                             placeholder='Insira a descrição...' 
@@ -61,7 +66,7 @@ const InserirDados = () => {
                         />
                     </div>
                     <div className='form-group'>
-                        <label for={valor}>Valor:</label>
+                        <label htmlFor={valor}>Valor:</label>
                         <input type='number'
                             className='form-control' 
                             placeholder='Insira o valor...' 
@@ -70,7 +75,7 @@ const InserirDados = () => {
                         />
                     </div>
                     <div className='form-group'>
-                        <label for={metodo}>Método de Pagamento:</label>
+                        <label htmlFor={metodo}>Método de Pagamento:</label>
                         <input type='text' 
                             className='form-control' 
                             placeholder='Insira o método de pagamento...' 
@@ -79,7 +84,7 @@ const InserirDados = () => {
                         />
                     </div>
                     <div className='form-group'>
-                        <label for={remetente}>Remetente:</label>
+                        <label htmlFor={remetente}>Remetente:</label>
                         <input type='text' 
                             className='form-control' 
                             placeholder='Insira o rementente...' 
@@ -88,7 +93,7 @@ const InserirDados = () => {
                         />
                     </div>
                     <div className='form-group'>
-                        <label for={categoria}>Categoria:</label>
+                        <label htmlFor={categoria}>Categoria:</label>
                         <input type='text' 
                             className='form-control' 
                             placeholder='Insira a categoria...' 
@@ -97,7 +102,7 @@ const InserirDados = () => {
                         />
                     </div>
                     <div className='form-group'>
-                        <label for={subcategoria}>Subcategoria:</label>
+                        <label htmlFor={subcategoria}>Subcategoria:</label>
                         <input type='text' 
                             className='form-control' 
                             placeholder='Insira a subcategoria...' 
@@ -106,7 +111,7 @@ const InserirDados = () => {
                         />
                     </div>
                     <div className='form-group'>
-                        <label for={classe}>Classe:</label>
+                        <label htmlFor={classe}>Classe:</label>
                         <input type='text' 
                             className='form-control' 
                             placeholder='Insira a classe...' 
@@ -115,7 +120,7 @@ const InserirDados = () => {
                         />
                     </div>
                     <div className='form-group'>
-                        <label for={subclasse}>Subclasse:</label>
+                        <label htmlFor={subclasse}>Subclasse:</label>
                         <input type='text' 
                             className='form-control' 
                             placeholder='Insira a subclasse...' 
@@ -124,12 +129,12 @@ const InserirDados = () => {
                         />
                     </div>  
                     <div className='form-group'>
-                        <label for={data_gregoriana}>Data gregoriana:</label>
+                        <label htmlFor={dataGregoriana}>Data gregoriana:</label>
                         <input type='date' 
                             className='form-control' 
                             placeholder='Insira a descrição...' 
-                            value={data_gregoriana} 
-                            onChange={e => definirData_gregoriana(e.target.value)}
+                            value={dataGregoriana} 
+                            onChange={e => definirDataGregoriana(e.target.value)}
                         />
                     </div>
                     
@@ -158,7 +163,7 @@ const InserirDados = () => {
                         onChange={e => definirLua(e.target.value)}
                     /> */}
                     
-                    <button className='btn btn-success' type="submit">Adicionar</button>
+                    <button className='btn btn-success' type="submit"> Adicionar</button>
                 </form>
             </div>
         </Fragment>

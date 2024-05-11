@@ -7,15 +7,16 @@ const app = express()
 app.use(cors());
 app.use(express.json())
 
+
 // Rotas
 
-// app.get('/financial-management', (req, res) => {
+// app.get('/gerenciador-financeiro', (req, res) => {
 //     res.send('acessado com sucesso!')
 // })
 
 
 // inserir item
-app.post("/financial-management", async (req, res) => {// app postar no caminho "/todos", func assincrona(par_requisicao, par_resposta) funcao de flecha
+app.post("/gerenciador-financeiro", async (req, res) => {// app postar no caminho "/todos", func assincrona(par_requisicao, par_resposta) funcao de flecha
     try {// tente 
         const { 
             descricao,
@@ -26,29 +27,28 @@ app.post("/financial-management", async (req, res) => {// app postar no caminho 
             subcategoria,
             classe,
             subclasse,
-            data_gregoriana,
+            dataGregoriana,
+            /*
             sincronario,
             plasma,
             heptal,
-            lua } = req.body;// const { descricao } valor igual ao par_respost chamar corpo
+            lua*/
+         } = req.body;// const { descricao } valor igual ao par_respost chamar corpo
 
-        const inserirDados = `
-        INSERT INTO receitabruta (
-            descricao,
-            valor,
-            metodo,
-            remetente,
-            categoria,
-            subcategoria,
-            classe,
-            subclasse,
-            data_gregoriana,
-            sincronario,
-            plasma,
-            heptal,
-            lua
-        ) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) RETURNING *;
-        `
+         const inserirDados = `
+         INSERT INTO receitabruta (
+             descricao,
+             valor,
+             metodo,
+             remetente,
+             categoria,
+             subcategoria,
+             classe,
+             subclasse,
+             dataGregoriana
+         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;
+     `;
+     
 
         // const novoAfazer = aguarde consulta de pool("INSERIR EM afazer (tabela_descricao) VALORES($1) RETORNANDO *")
         const inserirItem = await pool.query(inserirDados, [
@@ -60,11 +60,14 @@ app.post("/financial-management", async (req, res) => {// app postar no caminho 
             subcategoria,
             classe,
             subclasse,
-            data_gregoriana,
+            dataGregoriana
+            /*  
             sincronario,
             plasma,
             heptal,
-            lua]// const descricao
+            lua
+            */
+        ]// const inserirItem
         )
         res.json(inserirItem.rows[0]);// par_resposta chamar metodo json em(novoAfazer chamar linhas[indice_0])
     } catch (error){
@@ -75,7 +78,7 @@ app.post("/financial-management", async (req, res) => {// app postar no caminho 
 })
 
 // listar item especifico
-app.get("/financial-management/:id", async (req, res) => {
+app.get("/gerenciador-financeiro/:id", async (req, res) => {
     try {
         const { id } = req.params;
         const listarItem = await pool.query("SELECT * FROM receitabruta WHERE id = $1", [id])
@@ -88,7 +91,7 @@ app.get("/financial-management/:id", async (req, res) => {
 })
 
 // listar todos os itens
-app.get("/financial-management", async (req, res) => {
+app.get("/gerenciador-financeiro", async (req, res) => {
     try {
         const { id } = req.params;
         const listarItens = await pool.query("SELECT * FROM receitabruta")
@@ -99,7 +102,7 @@ app.get("/financial-management", async (req, res) => {
 })
 
 // atualizar item
-app.put("/financial-management/:id", async (req, res) => {
+app.put("/gerenciador-financeiro/:id", async (req, res) => {
     try {
         const { id } = req.params;
         const { 
@@ -111,29 +114,28 @@ app.put("/financial-management/:id", async (req, res) => {
             subcategoria,
             classe,
             subclasse,
-            data_gregoriana,
-            sincronario,
-            plasma,
-            heptal,
-            lua } = req.body// const { descricao } valor igual ao par_respost chamar corpo
-        
-        const atualizarDados = `
-        UPDATE receitabruta SET (
-            descricao,
-            valor,
-            metodo,
-            remetente,
-            categoria,
-            subcategoria,
-            classe,
-            subclasse,
-            data_gregoriana,
+            dataGregoriana
+            /*
             sincronario,
             plasma,
             heptal,
             lua
-        ) = ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) WHERE id = $14 ;
-        `
+        */ } = req.body// const { descricao } valor igual ao par_respost chamar corpo
+        
+        const atualizarDados = `
+        UPDATE receitabruta SET
+            descricao = $1,
+            valor = $2,
+            metodo = $3,
+            remetente = $4,
+            categoria = $5,
+            subcategoria = $6,
+            classe = $7,
+            subclasse = $8,
+            dataGregoriana = $9
+        WHERE id = $10;
+    `;
+    
         const atualizarItem = await pool.query(atualizarDados, [ 
             descricao,
             valor,
@@ -143,11 +145,13 @@ app.put("/financial-management/:id", async (req, res) => {
             subcategoria,
             classe,
             subclasse,
-            data_gregoriana,
+            dataGregoriana,
+            /*
             sincronario,
             plasma,
             heptal,
             lua,
+            */
             id
         ])
         res.json("Item atualizado com sucesso!")
@@ -157,7 +161,7 @@ app.put("/financial-management/:id", async (req, res) => {
 })
 
 // deletar item
-app.delete("/financial-management/:id", async (req, res) => {
+app.delete("/gerenciador-financeiro/:id", async (req, res) => {
     try {
         const { id } = req.params;
         const deletarDado = `
@@ -169,7 +173,6 @@ app.delete("/financial-management/:id", async (req, res) => {
         
     }
 })
-app.listen(5000, () => {
-    console.log('O servidor está rodando em http://localhost:5000/financial-management')
-
+app.listen(5001, () => {
+    console.log('O servidor está rodando em http://localhost:5001/gerenciador-financeiro/')
 })

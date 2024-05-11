@@ -11,26 +11,110 @@ html, body{
 /* classes auxiliares */
 .centro{
   /* max-width: 1080px; */
-  padding: 15px 2%;
+  padding: 20px 2%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  gap: 40px;
 }
 
-.mt-5{
-  margin: 0px auto 30px auto!important;
+/* inicio componente inserir */ 
+.Inserir{
+  padding: 0 0.5%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.Inserir h1{
+  text-align: center;
+  margin: 0!important;
+}
+
+
+
+.Inserir form.d-flex{
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto!important;
+  width: 100%;
 }
 
 .table{
   max-width: 768px;
-  margin: 0 auto;
+  margin: auto 10px auto 0;
   border-top: 1px solid #dee2e6;
+  border-bottom: 1px solid #dee2e6;
 }
 
 .table tr th, .table tr td{
   vertical-align: middle;
-  padding: 8px 4px;
+  padding: 4px;
+}
+
+
+
+.d-flex{
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group label{
+  padding-bottom:3px;
+  text-align: left!important;
+  font-weight: 500;
+}
+.Inserir .form-group{
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group input{
+  height: 40px;
+  padding-left: 10px;
+  border-radius: 5px;
+  outline: none;
+}
+
+.Inserir button.btn{
+  height: 40px;
+  background-color: rgb(52, 201, 52);
+  color: white;
+  font-weight: 700;
+  font-size: 15px;
+  border: 0;
+  border-radius: 5px;
+}
+
+/* fim componente inserir */ 
+
+h3,h5{
+  text-align: center;
+  background-color: white;
+  margin: 0!important;
+}
+h4{
+  margin: 0;
+}
+
+/* inicio componente listar */ 
+
+.List{
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.List .table{
+  max-width: 350px;
+  text-align: center;
+}
+
+.List .mt-5{
+  margin: 0!important;
+  padding: 2px 0 ;
 }
 
 form,.List__ganhos,.List__gastos{
@@ -46,6 +130,34 @@ form,.List__ganhos,.List__gastos{
   display: flex;
   flex-direction: column;
   align-self: flex-start;
+  gap: 10px;
+}
+
+.btn-warning {
+  background-color: #ffd86494!important;
+  border-color: #ffe600!important;
+}
+.btn-warning:hover{
+  background-color: #ffe600!important;
+}
+
+.btn-danger{
+  padding: 6px 12px;
+  border: 0;
+  background-color: #ff253a40;
+  color: red;
+  border: 1px solid red;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+svg.svg-inline--fa.fa-trash-can{
+  color: white;
+
+}
+.btn-danger:hover{
+  background-color: #ff0019b7;
+  border: 1px solid red;
 }
 
 .List__gastos h5{
@@ -56,48 +168,13 @@ form,.List__ganhos,.List__gastos{
   margin: 0;
 }
 
-.d-flex{
-  flex-direction: column;
-  gap: 20px;
-}
 
-.form-group label{
-  padding-bottom:3px;
-  text-align: left!important;
-  font-weight: 500;
-}
+/* fim componente listar */ 
 
-.btn{
-  padding: 3px 6px;
+/* inicio componente editar */ 
+.Editar{
+  /*display: none;*/
 }
-
-.Inserir{
-  padding: 15px 0.5%;
-}
-
-h3,h5{
-  text-align: center;
-  background-color: white;
-}
-h4{
-  margin: 0;
-}
-
-.List{
-  margin: 0 auto;
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-}
-
-.List .table{
-  max-width: 350px;
-}
-
-.List .mt-5{
-  margin: 0 0 10px 0!important;
-}
-
 .Editar form{
   background-color:transparent;
   padding: none;
@@ -115,8 +192,9 @@ h4{
 }
 
 .Editar .mt-5{
-  margin: 0;
+  margin: 10px 0;
 }
+
 
 button.close{
   padding: 4px 6px 2px 6px;
@@ -125,6 +203,9 @@ button.close{
   color: white;
   font-weight: 700;
 }
+
+/* fim componente listar */ 
+
 
 @media screen and (max-width: 480px) {
   .table tr th, .table tr td{

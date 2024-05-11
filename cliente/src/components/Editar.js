@@ -2,6 +2,13 @@ import React, { Fragment, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 
+/*   
+    Baixar dependencias
+    npm i @fortawesome/react-fontawesome
+    @fortawesome/free-regular-svg-icons
+    date-fns
+*/
+
 const EditarDados = ({ dado }) => {// constante EditTodo = ({ parametro }) => (arrow function){}
 
     const [descricao, definirDescricao] = useState(dado.descricao)
@@ -12,7 +19,7 @@ const EditarDados = ({ dado }) => {// constante EditTodo = ({ parametro }) => (a
     const [subcategoria, definirSubcategoria] = useState(dado.subcategoria)
     const [classe, definirClasse] = useState(dado.classe)
     const [subclasse, definirSubclasse] = useState(dado.subclasse)
-    const [data_gregoriana, definirData_gregoriana] = useState(dado.data_gregoriana)
+    const [dataGregoriana, definirDataGregoriana] = useState(dado.dataGregoriana)
 
     const atualizarDados = async e => { //constante atualizarDescricao = assincrona evento arrowFunction {}
         e.preventDefault();// evento prevencao padrao
@@ -29,12 +36,13 @@ const EditarDados = ({ dado }) => {// constante EditTodo = ({ parametro }) => (a
                 subcategoria,
                 classe,
                 subclasse,  
-                data_gregoriana,
+                dataGregoriana
             } // constante_corpo = { parametro description}
+
             const response = await fetch(`
-            http://localhost:5000/financial-management/${dado.id}
-            `,
-            { // constante resposta = aguarde busca (endereco de busca $(valor)tabela_todo coluna_id)
+            http://127.0.0.1:5001/gerenciador-financeiro/${dado.id}
+                `,
+                { // constante resposta = aguarde busca (endereco de busca $(valor)tabela_todo coluna_id)
                     method: 'PUT', // metodo : "COLOCAR"
                     headers:  { "Content-Type": "application/json" }, // cabecalhos : {"Tipo_Conteudo" : "aplicacao/json" }
                     body: JSON.stringify(body) // corpo : JSON.restringir(constante_corpo)
@@ -57,7 +65,7 @@ const EditarDados = ({ dado }) => {// constante EditTodo = ({ parametro }) => (a
                     data-bs-toggle="modal"
                     data-bs-target={`#id${dado.id}`}
                 >
-                    <FontAwesomeIcon icon={faPenToSquare} style={{color: "#fafcff", fontSize: "17px",}} />
+                    <FontAwesomeIcon icon={faPenToSquare} style={{color: "#ffffff", fontSize: "17px",}} />
                 </button>
                 <div
                     className="modal"
@@ -81,7 +89,7 @@ const EditarDados = ({ dado }) => {// constante EditTodo = ({ parametro }) => (a
                             <div className="modal-body">
                                 <form className='d-flex mt-5'>
                                     <div className='form-group'>
-                                        <label for={descricao}>Descrição:</label>
+                                        <label htmlFor={descricao}>Descrição:</label>
                                         <input 
                                             type='text' 
                                             className='form-control'
@@ -96,7 +104,7 @@ const EditarDados = ({ dado }) => {// constante EditTodo = ({ parametro }) => (a
                                         /> */}
                                     </div>
                                     <div className='form-group'>
-                                        <label for={valor}>Valor:</label>
+                                        <label htmlFor={valor}>Valor:</label>
                                         <input type='number'
                                             className='form-control' 
                                             placeholder='Insira o valor...' 
@@ -105,7 +113,7 @@ const EditarDados = ({ dado }) => {// constante EditTodo = ({ parametro }) => (a
                                         />
                                     </div>
                                     <div className='form-group'>
-                                        <label for={metodo}>Método de Pagamento:</label>
+                                        <label htmlFor={metodo}>Método de Pagamento:</label>
                                         <input type='text' 
                                             className='form-control' 
                                             placeholder='Insira o método de pagamento...' 
@@ -114,7 +122,7 @@ const EditarDados = ({ dado }) => {// constante EditTodo = ({ parametro }) => (a
                                         />
                                     </div>
                                     <div className='form-group'>
-                                        <label for={remetente}>Remetente:</label>
+                                        <label htmlFor={remetente}>Remetente:</label>
                                         <input type='text' 
                                             className='form-control' 
                                             placeholder='Insira o rementente...' 
@@ -123,7 +131,7 @@ const EditarDados = ({ dado }) => {// constante EditTodo = ({ parametro }) => (a
                                         />
                                     </div>
                                     <div className='form-group'>
-                                        <label for={categoria}>Categoria:</label>
+                                        <label htmlFor={categoria}>Categoria:</label>
                                         <input type='text' 
                                             className='form-control' 
                                             placeholder='Insira a categoria...' 
@@ -132,7 +140,7 @@ const EditarDados = ({ dado }) => {// constante EditTodo = ({ parametro }) => (a
                                         />
                                     </div>
                                     <div className='form-group'>
-                                        <label for={subcategoria}>Subcategoria:</label>
+                                        <label htmlFor={subcategoria}>Subcategoria:</label>
                                         <input type='text' 
                                             className='form-control' 
                                             placeholder='Insira a subcategoria...' 
@@ -140,8 +148,8 @@ const EditarDados = ({ dado }) => {// constante EditTodo = ({ parametro }) => (a
                                             onChange={e => definirSubcategoria(e.target.value)}
                                         />
                                     </div>
-                                    <div className='form-group'>'Insira a data da operação...'
-                                        <label for={classe}>Classe:</label>
+                                    <div className='form-group'>
+                                        <label htmlFor={classe}>Classe:</label>
                                         <input type='text' 
                                             className='form-control' 
                                             placeholder='Insira a classe...' 
@@ -150,7 +158,7 @@ const EditarDados = ({ dado }) => {// constante EditTodo = ({ parametro }) => (a
                                         />
                                     </div>
                                     <div className='form-group'>
-                                        <label for={subclasse}>Subclasse:</label>
+                                        <label htmlFor={subclasse}>Subclasse:</label>
                                         <input type='text' 
                                             className='form-control' 
                                             placeholder='Insira a subclasse...' 
@@ -159,12 +167,12 @@ const EditarDados = ({ dado }) => {// constante EditTodo = ({ parametro }) => (a
                                         />
                                     </div>  
                                     <div className='form-group'>
-                                        <label for={data_gregoriana}>Data gregoriana:</label>
+                                        <label htmlFor={dataGregoriana}>Data gregoriana:</label>
                                         <input type='date' 
                                             className='form-control' 
                                             placeholder='Insira a data da operação...' 
-                                            value={data_gregoriana} 
-                                            onChange={e => definirData_gregoriana(e.target.value)}
+                                            value={dataGregoriana} 
+                                            onChange={e => definirDataGregoriana(e.target.value)}
                                         />
                                     </div>
                                     

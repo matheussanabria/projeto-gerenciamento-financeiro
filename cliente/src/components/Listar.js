@@ -9,7 +9,7 @@ const ListarDados = () => {
 
     const deletarDado = async (id) => {
         try {
-          const deletarDado = await fetch(`http://localhost:5000/financial-management/${id}`, {
+          const deletarDado = await fetch(`http://127.0.0.1:5001/gerenciador-financeiro/${id}`, {
             method: 'DELETE',
           });
     
@@ -21,7 +21,7 @@ const ListarDados = () => {
 
     const obterDados = async () => {
         try {
-            const resposta = await fetch('http://localhost:5000/financial-management')
+            const resposta = await fetch('http://127.0.0.1:5001/gerenciador-financeiro/')
             const dadosJson = await resposta.json()
             
             definirDados(dadosJson)
@@ -33,7 +33,55 @@ const ListarDados = () => {
     useEffect(() => {
         obterDados()
     }, [])
+    
+    const formatarData = (data) => {
+        if (!data) return ""; // Tratamento para data vazia
 
+        // Convertendo a string para um objeto de data JavaScript
+        const dataFormatada = new Date(data);
+
+        // Formatando a data conforme necessário
+        return format(dataFormatada, 'dd/MM/yyyy');
+    };
+
+    const totalGastosElement = dados.filter(dado => dado.categoria === 'Gastos').map(dado => (
+        <tr key={dado.id}>
+            <td>{dado.descricao}</td>
+            <td>R${parseFloat(dado.valor).toFixed(2)}</td>
+            <td>{formatarData(dado.datagregoriana)}</td>
+            <td>
+                <EditarDados dado={dado} />
+            </td>
+            <td>
+                <button
+                    className="btn btn-danger"
+                    onClick={() => deletarDado(dado.id)}
+                >
+                    <FontAwesomeIcon icon={faTrashCan} style={{ color: "#ffffff", fontSize: "17px" }} />
+                </button>
+            </td>
+        </tr>
+    ));
+
+    const totalGanhosElement = dados.filter(dado => dado.categoria === 'Ganhos').map(dado => (
+        <tr key={dado.id}>
+            <td>{dado.descricao}</td>
+            <td>R${parseFloat(dado.valor).toFixed(2)}</td>
+            <td>{formatarData(dado.datagregoriana)}</td>
+            <td>
+                <EditarDados dado={dado} />
+            </td>
+            <td>
+                <button
+                    className="btn btn-danger"
+                    onClick={() => deletarDado(dado.id)}
+                >
+                    <FontAwesomeIcon icon={faTrashCan} style={{ color: "#ffffff", fontSize: "17px" }} />
+                </button>
+            </td>
+        </tr>
+    ));
+    
     // Função para calcular o total dos valores
     // const calcularTotal = () => {
     //     return dados.reduce((total, dado) => total + parseFloat(dado.valor), 0).toFixed(2);
@@ -47,139 +95,6 @@ const ListarDados = () => {
         return lista.reduce((total, dado) => total + parseFloat(dado.valor), 0).toFixed(2);
     };
 
-     // Condição para exibir o elemento se dadosGastos não for vazio
-     let totalGastosElement = null;
-     if (dadosGastos.length > 0) {
-         totalGastosElement = 
-         <div className="List__gastos">
-                <h3>Gastos</h3>
-                <table className="table mt-5 text-center">
-                    {/* ... (cabeçalho e corpo da tabela) */}
-                    <thead>
-                        <tr>
-                            <th>Descrição</th>
-                            <th>Valor</th>
-                            {/* <th>Método</th> */}
-                            {/* <th>Remetente</th> */}
-                            {/* <th>Categoria</th> */}
-                            {/* <th>Subcategoria</th> */}
-                            {/* <th>Classe</th> */}
-                            {/* <th>Subclasse</th> */}
-                            <th>Data</th>
-                            {/* <th>Sincronário</th>
-                            <th>Plasma Radial</th>
-                            <th>Heptal</th>
-                            <th>Lua</th> */}
-                            <th>Editar</th>
-                            <th>Deletar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            dadosGastos.map(dado => (
-                                <tr key={dado.id}>
-                                    <td>{dado.descricao}</td>
-                                    <td>R${parseFloat(dado.valor).toFixed(2)}</td>
-                                    {/* <td>{dado.metodo}</td> */}
-                                    {/* <td>{dado.remetente}</td> */}
-                                    {/* <td>{dado.categoria}</td> */}
-                                    {/* <td>{dado.subcategoria}</td> */}
-                                    {/* <td>{dado.classe}</td> */}
-                                    {/* <td>{dado.subclasse}</td> */}
-                                    <td>{format(new Date(dado.data_gregoriana), 'dd/MM')}</td>
-                                    {/* <td>{dado.sincronario}</td>
-                                    <td>{dado.plasma}</td>
-                                    <td>{dado.heptal}</td>
-                                    <td>{dado.lua}</td> */}
-                                    <td>
-                                        <EditarDados dado={dado}/>  
-                                    </td>
-                                    <td>
-                                        <button
-                                            className="btn btn-danger"
-                                            onClick={
-                                                () => deletarDado(dado.id)
-                                            }
-                                        >
-                                            <FontAwesomeIcon icon={faTrashCan} style={{color: "#ffffff", fontSize: "17px"}} />
-                                        </button>    
-                                    </td>
-
-                                </tr>
-                            ))
-                        }
-                    </tbody>
-                </table>
-                <h5>Total Gastos: R${calcularTotal(dadosGastos)}</h5>                
-            </div>
-     }
-
-     // Condição para exibir o elemento se dadosGastos não for vazio
-     let totalGanhosElement = null;
-     if (dadosGanhos.length > 0) {
-         totalGanhosElement = 
-         <div className="List__ganhos">
-                <h3>Ganhos</h3>
-                <table className="table mt-5 text-center">
-                    {/* ... (cabeçalho e corpo da tabela) */}
-                    <thead>
-                        <tr>
-                            <th>Descrição</th>
-                            <th>Valor</th>
-                            {/* <th>Método</th> */}
-                            {/* <th>Remetente</th> */}
-                            {/* <th>Categoria</th> */}
-                            {/* <th>Subcategoria</th> */}
-                            {/* <th>Classe</th> */}
-                            {/* <th>Subclasse</th> */}
-                            <th>Data</th>
-                            {/* <th>Sincronário</th>
-                            <th>Plasma Radial</th>
-                            <th>Heptal</th>
-                            <th>Lua</th> */}
-                            <th>Editar</th>
-                            <th>Deletar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            dadosGanhos.map((dado) =>  (          
-                                <tr key={dado.id}>
-                                    <td>{dado.descricao}</td>
-                                    <td>R${parseFloat(dado.valor).toFixed(2)}</td>
-                                    {/* <td>{dado.metodo}</td> */}
-                                    {/* <td>{dado.remetente}</td> */}
-                                    {/* <td>{dado.categoria}</td> */}
-                                    {/* <td>{dado.subcategoria}</td> */}
-                                    {/* <td>{dado.classe}</td> */}
-                                    {/* <td>{dado.subclasse}</td> */}
-                                    <td>{format(new Date(dado.data_gregoriana), 'dd/MM')}</td>
-                                    {/* <td>{dado.sincronario}</td>
-                                    <td>{dado.plasma}</td>
-                                    <td>{dado.heptal}</td>
-                                    <td>{dado.lua}</td> */}
-                                    <td>
-                                        <EditarDados dado={dado}/>  
-                                    </td>
-                                    <td>
-                                        <button
-                                            className="btn btn-danger"
-                                            onClick={
-                                                () => deletarDado(dado.id)
-                                            }
-                                        >
-                                            <FontAwesomeIcon icon={faTrashCan} style={{color: "#ffffff", fontSize: "17px"}} />
-                                        </button>    
-                                    </td>
-
-                                </tr>
-                            ))
-                        }
-                    </tbody>
-                </table>
-                <h5>Total Gastos: R${calcularTotal(dadosGanhos)}</h5>
-            </div>
-     }
 
     //   // Função para calcular o total dos valores com a categoria "gastos"
     //   const calcularTotalGastos = () => {
@@ -190,8 +105,43 @@ const ListarDados = () => {
     return (
         <Fragment>
             <div className="List">
-                {totalGastosElement}
-                {totalGanhosElement}
+                <div className="List__gastos">
+                    <h3>Gastos</h3>
+                    <table className="table mt-5 text-center">
+                        <thead>
+                            <tr>
+                                <th>Descrição</th>
+                                <th>Valor</th>
+                                <th>Data</th>
+                                <th>Editar</th>
+                                <th>Deletar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {totalGastosElement}
+                        </tbody>
+                    </table>
+                    <h5>Total Gastos: R${calcularTotal(dadosGastos)}</h5>
+                </div>
+                {/* Código similar para exibir total de ganhos */}
+                <div className="List__ganhos">
+                    <h3>Ganhos</h3>
+                    <table className="table mt-5 text-center">
+                        <thead>
+                            <tr>
+                                <th>Descrição</th>
+                                <th>Valor</th>
+                                <th>Data</th>
+                                <th>Editar</th>
+                                <th>Deletar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {totalGanhosElement}
+                        </tbody>
+                    </table>
+                    <h5>Total Ganhos: R${calcularTotal(dadosGanhos)}</h5>
+                </div>
             </div>
         </Fragment>
     )
