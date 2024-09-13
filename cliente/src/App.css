@@ -51,6 +51,7 @@ html, body{
 .table tr th, .table tr td{
   vertical-align: middle;
   padding: 4px;
+  font-size: 0.8em;
 }
 
 
@@ -89,27 +90,123 @@ html, body{
 
 /* fim componente inserir */ 
 
-h3,h5{
-  text-align: center;
-  background-color: white;
-  margin: 0!important;
-}
 h4{
-  margin: 0;
+  text-align: center;
+  margin: 0!important;
+  font-size: 1.2em;
 }
 
 /* inicio componente listar */ 
-
+.form{
+  border: 1px solid black;
+}
 .List{
   margin: 0 auto;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-between;
+}
+
+.tab{
+  display: flex;
+}
+.tab-button {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.tab-button:nth-of-type(1n){
+  background-color: #00ff021a;
+  border-color: green;
+  color: green;
+}
+
+.tab-button:nth-of-type(2n){
+  background-color: #ff00001a;
+  border-color: red;
+  color: red;
+}
+
+.tab-button.active {
+  font-weight: bold;
+}
+
+.content {
+  padding-top: 20px;
+}
+
+
+.gastos, .ganhos{
+  width: 100%;
+  display: flex;
   gap: 20px;
 }
 
+.List__gastos, .List__ganhos{
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+  gap: 10px;
+}
+
+.List__gastos{
+  border: 1px solid red;
+}
+
+.List__ganhos{
+  border: 1px solid green;
+}
+
+.List__ganhos, .grafico-ganhos{
+  box-shadow: 0px 0px 20px 5px #00ff027a;
+    background-color: #00ff021a !important;
+}
+
+.List__ganhos h4,h5{
+  background-color:transparent!important;
+}
+
+
+.List__gastos h4,h5{
+  background-color:transparent!important;
+}
+
+.grafico-ganhos{
+  width: 50%;
+  box-shadow: 0px 0px 20px 5px #00ff027a;
+  background-color: #00ff021a !important;
+  border: 1px solid green;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.grafico-gastos{
+  width: 50%;
+  box-shadow: 0px 0px 20px 5px #ff00007a;
+  background-color: #ff00001a !important;
+  border: 1px solid red;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.List__gastos, .grafico-gastos{
+  box-shadow: 0px 0px 20px 5px #ff00007a;
+  background-color: #ff00001a !important;
+}
+
 .List .table{
-  max-width: 350px;
   text-align: center;
+}
+
+.table>:not(caption)>*>*{
+  background-color: transparent!important;
 }
 
 .List .mt-5{
@@ -117,21 +214,26 @@ h4{
   padding: 2px 0 ;
 }
 
-form,.List__ganhos,.List__gastos{
+.List__ganhos,.List__gastos{
   background-color:transparent;
   padding: 10px;
   border-radius: 5px;
-  box-shadow: 4px 1px 20px 1px #ccc;
-  margin: 0 5px 1rem 5px;
   max-width: 768px;
 }
 
-.List__ganhos,.List__gastos{
+.form{
   display: flex;
   flex-direction: column;
-  align-self: flex-start;
   gap: 10px;
+  border: 0;
 }
+.form-label{
+  margin: 0;
+}
+
+
+
+
 
 .btn-warning {
   background-color: #ffd86494!important;
@@ -223,24 +325,25 @@ button.close{
     gap: 12.5px!important;
   }
 }
+@media screen and (max-width: 768px) {
 
-@media screen and (max-width: 767px) {
   .List{
-    flex-direction: column;
-    margin: 0;
+    width: 90%;
   }
 
-  .List__ganhos,.List__gastos{
-    align-self: auto;
+  .gastos {
+    flex-direction: column;
   }
-  
-  .List .table{
-    max-width: 768px;
+
+  .List__gastos, .grafico-gastos {
     width: 100%;
   }
 
-  .List__gastos h5{
-    padding-top: 0;
+  .ganhos {
+    flex-direction: column;
   }
-  
+
+  .List__ganhos, .grafico-ganhos {
+    width: 100%;
+  }
 }

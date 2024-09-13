@@ -31,7 +31,7 @@ const InserirDados = () => {
                 dataGregoriana
             }
     
-            const resposta = await fetch(`http://127.0.0.1:5001/gerenciador-financeiro/`, 
+            const resposta = await fetch(`http://127.0.0.1:5001/gerenciador-financeiro/`, //end-point back-end
                 {
                     method: "POST",
                     headers: {"Content-Type":"application/json"},

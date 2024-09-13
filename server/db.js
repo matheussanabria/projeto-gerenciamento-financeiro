@@ -11,6 +11,13 @@ const pool = new Pool ({
     /* 3306 */
     database: "gerenciamentoFinanceiro"
     /*u302104969_gerFinanceiro*/
+    /*
+    user: 'u302104969_economista',
+    password: "0rgFinPessoal",
+    host: "mysql.hostinger.com",  // Atualize este valor conforme necessário
+    port: 3306,
+    database: 'u302104969_gerFinanceiro'
+    */
 })
 
 module.exports = pool;

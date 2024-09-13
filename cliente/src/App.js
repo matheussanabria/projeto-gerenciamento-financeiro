@@ -8,7 +8,9 @@ function App() {
   return (
     <Fragment>
       <div className='centro'>
+      {/*
         <InserirDados/>
+      */}
         <ListarDados/>
       </div>
     </Fragment>

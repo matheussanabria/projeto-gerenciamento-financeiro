@@ -2,6 +2,10 @@ const express = require('express')
 const cors = require('cors')
 const pool = require('./db')
 const app = express()
+const port = 5001;
+const host = 'localhost';
+
+//const host = '185.245.180.67';
 
 //middlewares
 app.use(cors());
@@ -33,7 +37,7 @@ app.post("/gerenciador-financeiro", async (req, res) => {// app postar no caminh
             plasma,
             heptal,
             lua*/
-         } = req.body;// const { descricao } valor igual ao par_respost chamar corpo
+         } = req.body;// const { descricao } valor igual  ao par_respost chamar corpo
 
          const inserirDados = `
          INSERT INTO receitabruta (
@@ -173,6 +177,6 @@ app.delete("/gerenciador-financeiro/:id", async (req, res) => {
         
     }
 })
-app.listen(5001, () => {
-    console.log('O servidor está rodando em http://localhost:5001/gerenciador-financeiro/')
+app.listen(port, () => {
+    console.log(`O servidor está rodando em http://${host}:${port}/gerenciador-financeiro/`)
 })
