@@ -33,21 +33,21 @@ const GraficoPizzaGastos = ({ dadosGastosPorClasse }) => {
     const options = {
         plugins: {
             legend: {
-                position: 'top', // Define a posição da legenda (pode ser 'top', 'bottom', 'left', 'right')
+                position: 'top', // Define a posição da legenda
                 labels: {
-                    usePointStyle: true, // Usa círculos pequenos ao invés de quadrados na legenda
-                    padding: 20, // Ajusta o espaçamento entre os itens da legenda
-                    boxWidth: 10, // Largura do quadrado/círculo da legenda
+                    usePointStyle: true,
+                    padding: 20,
+                    boxWidth: 10,
                     font: {
-                        size: 14, // Tamanho da fonte da legenda
+                        size: 14,
                     },
                     generateLabels: (chart) => {
                         const data = chart.data;
                         return data.labels.map((label, i) => ({
-                            text: `${label}`, // Exibe o valor com "R$" na legenda
-                            fillStyle: data.datasets[0].backgroundColor[i], // Cor do círculo na legenda
-                            strokeStyle: data.datasets[0].backgroundColor[i], // Cor do contorno
-                            pointStyle: 'rect', // Define a forma como um círculo
+                            text: `${label}`, // Exibe o nome da classe
+                            fillStyle: data.datasets[0].backgroundColor[i],
+                            strokeStyle: data.datasets[0].backgroundColor[i],
+                            pointStyle: 'rect',
                         }));
                     }
                 }
@@ -56,7 +56,7 @@ const GraficoPizzaGastos = ({ dadosGastosPorClasse }) => {
                 callbacks: {
                     label: function (tooltipItem) {
                         const valor = tooltipItem.raw.toFixed(2); // Formatar valor com 2 casas decimais
-                        return ` R$ ${valor}`; // Adicionar "R$" antes do valor na tooltip
+                        return `R$ ${valor}`; // Adicionar "R$" antes do valor na tooltip
                     }
                 }
             }
@@ -65,8 +65,8 @@ const GraficoPizzaGastos = ({ dadosGastosPorClasse }) => {
 
     return (
         <div>
-            <h4 style={{ textAlign: 'center'}}>Distribuição de Gastos por Classe</h4>
-            <Pie style={{margin:'auto'}} data={data} options={options} />
+            <h4 style={{ textAlign: 'center' }}>Distribuição de Gastos por Classe</h4>
+            <Pie style={{ margin: 'auto' }} data={data} options={options} />
         </div>
     );
 };

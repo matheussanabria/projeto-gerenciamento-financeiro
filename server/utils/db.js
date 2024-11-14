@@ -1,5 +1,4 @@
-const Pool = require('pg').Pool;
-
+const { Pool } = require('pg');
 const pool = new Pool ({
     user: "postgres",
     /* u302104969_economista */
@@ -20,4 +19,6 @@ const pool = new Pool ({
     */
 })
 
-module.exports = pool;
+module.exports = {
+    query: (text, params) => pool.query(text, params),
+};

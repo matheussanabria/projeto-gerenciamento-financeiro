@@ -9,22 +9,29 @@ import GraficoPizzaGanhos from "./graficoGanhos";
 
 const ListarDados = () => {
     const [dados, definirDados] = useState([]);
-    const [abaAtiva, definirAbaAtiva] = useState('ganhos');
+    const [abas, definirAbas] = useState([]);
+    const [abaAtiva, definirAbaAtiva] = useState('');
     const [showForm, setShowForm] = useState(false);
     const [novoDado, setNovoDado] = useState({
         descricao: '',
         valor: '',
-        metodo: '',
-        remetente: '',
-        subcategoria: '',
-        classe: '',
-        subclasse: '',
-        datagregoriana: ''
+        metodo_pagamento_id: '',
+        remetente_id: '',
+        subcategoria_id: '',
+        classe_id: '',
+        subclasse_id: '',
+        data: ''
     });
+
+    const [metodosPagamento, setMetodosPagamento] = useState([]);
+    const [categorias, setCategorias] = useState([]);
+    const [subcategorias, setSubcategorias] = useState([]);
+    const [classes, setClasses] = useState([]);
+    const [subclasses, setSubclasses] = useState([]);
 
     const deletarDado = async (id) => {
         try {
-          await fetch(`http://127.0.0.1:5001/gerenciador-financeiro/${id}`, {
+          await fetch(`http://localhost:5001/transacoes/${id}`, {
             method: 'DELETE',
           });
           definirDados(dados.filter((dado) => dado.id !== id));
@@ -33,95 +40,68 @@ const ListarDados = () => {
         }
     };
 
-    const obterDados = async () => {
+    const obterOpcoes = async () => {
         try {
-            const resposta = await fetch('http://127.0.0.1:5001/gerenciador-financeiro/');
-            const dadosJson = await resposta.json();
-            definirDados(dadosJson);
+            const metodosResposta = await fetch('http://localhost:5001/metodos-pagamento/');
+            const categoriasResposta = await fetch('http://localhost:5001/categorias/');
+            const subcategoriasResposta = await fetch('http://localhost:5001/subcategorias/');
+            const classesResposta = await fetch('http://localhost:5001/classes/');
+            const subclassesResposta = await fetch('http://localhost:5001/subclasses/');
+
+            const metodosJson = await metodosResposta.json();
+            const categoriasJson = await categoriasResposta.json();
+            const subcategoriasJson = await subcategoriasResposta.json();
+            const classesJson = await classesResposta.json();
+            const subclassesJson = await subclassesResposta.json();
+
+            setMetodosPagamento(metodosJson);
+            setCategorias(categoriasJson);
+            setSubcategorias(subcategoriasJson);
+            setClasses(classesJson);
+            setSubclasses(subclassesJson);
+
+            // Defina as abas dinamicamente com base nas categorias
+            definirAbas(categoriasJson); // Agora definindo abas com as categorias recebidas
+
+            // Definindo a aba ativa como a primeira
+            if (categoriasJson && categoriasJson.length > 0) {
+                definirAbas(categoriasJson);// Inicia com a primeira categoria
+            } else {
+                console.error("Erro: Nenhuma categoria encontrada.");
+            }
+
         } catch (error) {
             console.log(error);
         }
     };
 
-    useEffect(() => {
-        obterDados();
-    }, []);
+    const obterDados = async () => {
+        try {
+            const resposta = await fetch('http://localhost:5001/transacoes/');
+            if (!resposta.ok) {
+                throw new Error(`HTTP error! Status: ${resposta.status}`);
+            }
+            const dadosJson = await resposta.json();
+            definirDados(dadosJson);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
 
     const formatarData = (data) => {
-        if (!data) return ""; // Tratamento para data vazia
+        if (!data) return ""; 
         const dataFormatada = new Date(data);
         return format(dataFormatada, 'dd/MM/yyyy');
     };
 
-    const totalGastosElement = dados.filter(dado => dado.categoria === 'Gastos').map(dado => (
-        <tr key={dado.id}>
-            <td>{dado.descricao}</td>
-            <td>R${parseFloat(dado.valor).toFixed(2)}</td>
-            <td>{formatarData(dado.datagregoriana)}</td>
-            <td>
-                <EditarDados dado={dado} />
-            </td>
-            <td>
-                <button
-                    className="btn btn-danger"
-                    onClick={() => deletarDado(dado.id)}
-                >
-                    <FontAwesomeIcon icon={faTrashCan} style={{ color: "#ffffff", fontSize: "17px" }} />
-                </button>
-            </td>
-        </tr>
-    ));
-
-    const totalGanhosElement = dados.filter(dado => dado.categoria === 'Ganhos').map(dado => (
-        <tr key={dado.id}>
-            <td>{dado.descricao}</td>
-            <td>R${parseFloat(dado.valor).toFixed(2)}</td>
-            <td>{formatarData(dado.datagregoriana)}</td>
-            <td>
-                <EditarDados dado={dado} />
-            </td>
-            <td>
-                <button
-                    className="btn btn-danger"
-                    onClick={() => deletarDado(dado.id)}
-                >
-                    <FontAwesomeIcon icon={faTrashCan} style={{ color: "#ffffff", fontSize: "17px" }} />
-                </button>
-            </td>
-        </tr>
-    ));
-
-    const dadosGastos = dados.filter(dado => dado.categoria === 'Gastos');
-    const dadosGanhos = dados.filter(dado => dado.categoria === 'Ganhos');
+    const atualizarDados = async () => {
+        await obterDados();
+    };
 
     const calcularTotal = (lista) => {
         return lista.reduce((total, dado) => total + parseFloat(dado.valor), 0).toFixed(2);
     };
-
-    const agruparGastosPorClasse = () => {
-        return dadosGastos.reduce((acumulador, gasto) => {
-            const classe = gasto.classe || 'Outros'; 
-            if (!acumulador[classe]) {
-                acumulador[classe] = 0;
-            }
-            acumulador[classe] += parseFloat(gasto.valor);
-            return acumulador;
-        }, {});
-    };
-
-    const agruparGanhosPorClasse = () => {
-        return dadosGanhos.reduce((acumulador, ganho) => {
-            const classe = ganho.classe || 'Outros'; 
-            if (!acumulador[classe]) {
-                acumulador[classe] = 0;
-            }
-            acumulador[classe] += parseFloat(ganho.valor);
-            return acumulador;
-        }, {});
-    };
-
-    const dadosAgrupadosPorClasseGastos = agruparGastosPorClasse();
-    const dadosAgrupadosPorClasseGanhos = agruparGanhosPorClasse();
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -133,60 +113,75 @@ const ListarDados = () => {
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-        const categoria = abaAtiva === 'ganhos' ? 'Ganhos' : 'Gastos';
+        const categoria = abas.find(aba => aba && aba.cat_nome === abaAtiva);
+        if (!abas || abas.length === 0) {
+            return <div>Carregando categorias...</div>;
+        }
+        console.log(abas);  
+        console.log(categoria);
 
+        const categoria_id = categoria ? categoria.id : null;
+
+        if (!novoDado.descricao || !novoDado.valor) {
+            console.log('Please fill in all required fields.');
+            return;
+        }
+        
         try {
-            await fetch('http://127.0.0.1:5001/gerenciador-financeiro/', {
+            const response = await fetch('http://localhost:5001/transacoes/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ ...novoDado, categoria })
+                body: JSON.stringify({ ...novoDado, categoria_id })
             });
-
+            
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+    
             setNovoDado({
                 descricao: '',
                 valor: '',
-                metodo: '',
-                remetente: '',
-                subcategoria: '',
-                classe: '',
-                subclasse: '',
-                datagregoriana: ''
+                metodo_pagamento_id: '',
+                remetente_id: '',
+                subcategoria_id: '',
+                classe_id: '',
+                subclasse_id: '',
+                data: ''
             });
-
+    
             setShowForm(false);
             obterDados();
         } catch (error) {
-            console.log(error);
+            console.log('Error:', error);
         }
     };
+
+    useEffect(() => {
+        obterOpcoes();
+        obterDados();
+    }, []);
 
     return (
         <Fragment>
             <div className="List">
                 <div className="tabs">
                     <div className="tab">
-                        
-                        <button 
-                            className={`tab-button ${abaAtiva === 'ganhos' ? 'active' : ''}`} 
-                            onClick={() => definirAbaAtiva('ganhos')}
-                        >
-                            Ganhos
-                        </button>
-                        <button 
-                            className={`tab-button ${abaAtiva === 'gastos' ? 'active' : ''}`} 
-                            onClick={() => definirAbaAtiva('gastos')}
-                        >
-                            Gastos
-                        </button>
+                        {abas.map((aba) => (
+                            <button 
+                                key={aba.id} // Adicionando uma key única para cada aba
+                                className={`tab-button ${abaAtiva === aba.cat_nome ? 'active' : ''}`} 
+                                onClick={() => definirAbaAtiva(aba.cat_nome)}
+                            >
+                                {aba.cat_nome}
+                            </button>
+                        ))}
                     </div>
-
                     <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>
                         {showForm ? 'Cancelar' : 'Adicionar Novo Dado'}
                     </button>
                 </div>
-
 
                 <Modal show={showForm} onHide={() => setShowForm(false)}>
                     <Modal.Header closeButton>
@@ -215,124 +210,114 @@ const ListarDados = () => {
                                 />
                             </Form.Group>
                             <Form.Group controlId="metodo">
-                                <Form.Label>Método</Form.Label>
+                                <Form.Label>Método de Pagamento</Form.Label>
                                 <Form.Control
-                                    type="text"
-                                    name="metodo"
-                                    value={novoDado.metodo}
+                                    as="select"
+                                    name="metodo_pagamento_id"
+                                    value={novoDado.metodo_pagamento_id}
                                     onChange={handleInputChange}
-                                />
+                                >
+                                    <option value="">Selecione o método</option>
+                                    {metodosPagamento.map((metodo) => (
+                                        <option key={metodo.id} value={metodo.id}>{metodo.metodo_pag_nome}</option>
+                                    ))}
+                                </Form.Control>
                             </Form.Group>
                             <Form.Group controlId="remetente">
                                 <Form.Label>Remetente</Form.Label>
                                 <Form.Control
                                     type="text"
-                                    name="remetente"
-                                    value={novoDado.remetente}
+                                    name="remetente_id"
+                                    value={novoDado.remetente_id}
                                     onChange={handleInputChange}
                                 />
                             </Form.Group>
-                            <Form.Group controlId="subcategoria">
+                            <Form.Group controlId="subcategoria_id">
                                 <Form.Label>Subcategoria</Form.Label>
                                 <Form.Control
-                                    type="text"
-                                    name="subcategoria"
-                                    value={novoDado.subcategoria}
+                                    as="select"
+                                    name="subcategoria_id"
+                                    value={novoDado.subcategoria_id}
                                     onChange={handleInputChange}
-                                />
+                                >
+                                    <option value="">Selecione a subcategoria</option>
+                                    {subcategorias.map((subcategoria) => (
+                                        <option key={subcategoria.id} value={subcategoria.id}>{subcategoria.subcat_nome}</option>
+                                    ))}
+                                </Form.Control>
                             </Form.Group>
                             <Form.Group controlId="classe">
                                 <Form.Label>Classe</Form.Label>
                                 <Form.Control
-                                    type="text"
-                                    name="classe"
-                                    value={novoDado.classe}
+                                    as="select"
+                                    name="classe_id"
+                                    value={novoDado.classe_id}
                                     onChange={handleInputChange}
-                                />
+                                >
+                                    <option value="">Selecione a classe</option>
+                                    {classes.map((classe) => (
+                                        <option key={classe.id} value={classe.id}>{classe.class_nome}</option>
+                                    ))}
+                                </Form.Control>
                             </Form.Group>
                             <Form.Group controlId="subclasse">
                                 <Form.Label>Subclasse</Form.Label>
                                 <Form.Control
-                                    type="text"
-                                    name="subclasse"
-                                    value={novoDado.subclasse}
+                                    as="select"
+                                    name="subclasse_id"
+                                    value={novoDado.subclasse_id}
                                     onChange={handleInputChange}
-                                />
+                                >
+                                    <option value="">Selecione a subclasse</option>
+                                    {subclasses.map((subclasse) => (
+                                        <option key={subclasse.id} value={subclasse.id}>{subclasse.subclass_nome}</option>
+                                    ))}
+                                </Form.Control>
                             </Form.Group>
-                            <Form.Group controlId="datagregoriana">
+                            <Form.Group controlId="data">
                                 <Form.Label>Data</Form.Label>
                                 <Form.Control
                                     type="date"
-                                    name="datagregoriana"
-                                    value={novoDado.datagregoriana}
+                                    name="data"
+                                    value={novoDado.data}
                                     onChange={handleInputChange}
-                                    required
                                 />
                             </Form.Group>
-                            <Button type="submit">
+                            <Button variant="primary" type="submit">
                                 Adicionar
                             </Button>
                         </Form>
                     </Modal.Body>
                 </Modal>
 
-                {abaAtiva === 'ganhos' && (
-                    <div className="content">
-                        <div className="ganhos">
-                            <div className="List__ganhos">
-                                <h4>Ganhos</h4>
-                                <table className="table mt-5 text-center">
-                                    <thead>
-                                        <tr>
-                                            <th>Descrição</th>
-                                            <th>Valor</th>
-                                            <th>Data</th>
-                                            <th>Editar</th>
-                                            <th>Deletar</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {totalGanhosElement}
-                                    </tbody>
-                                </table>
-                                <h4>Total Ganhos: R${calcularTotal(dadosGanhos)}</h4>
-                            </div>
-
-                            <div className="grafico-ganhos">
-                                <GraficoPizzaGanhos dadosGanhosPorClasse={dadosAgrupadosPorClasseGanhos} />
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {abaAtiva === 'gastos' && (
-                    <div className="content">
-                        <div className="gastos">
-                            <div className="List__gastos">
-                                <h4>Gastos</h4>
-                                <table className="table mt-5 text-center">
-                                    <thead>
-                                        <tr>
-                                            <th>Descrição</th>
-                                            <th>Valor</th>
-                                            <th>Data</th>
-                                            <th>Editar</th>
-                                            <th>Deletar</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {totalGastosElement}
-                                    </tbody>
-                                </table>
-                                <h4>Total Gastos: R${calcularTotal(dadosGastos)}</h4>
-                            </div>
-
-                            <div className="grafico-gastos">
-                                <GraficoPizzaGastos dadosGastosPorClasse={dadosAgrupadosPorClasseGastos} />
-                            </div>
-                        </div>
-                    </div>
-                )}
+                <table className="table">
+                    <thead>
+                        <tr>
+                            <th>Descrição</th>
+                            <th>Valor</th>
+                            <th>Método de Pagamento</th>
+                            <th>Data</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {dados.filter(dado => dado.categoria.cat_nome === abaAtiva).map((dado) => (
+                            <tr key={dado.id}>
+                                <td>{dado.descricao}</td>
+                                <td>{dado.valor}</td>
+                                <td>{dado.metodo_pagamento.nome}</td>
+                                <td>{formatarData(dado.data)}</td>
+                                <td>
+                                    <Button variant="danger" onClick={() => deletarDado(dado.id)}>
+                                        <FontAwesomeIcon icon={faTrashCan} />
+                                    </Button>
+                                    <EditarDados atualizarDados={atualizarDados} dado={dado} />
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                <h3>Total: R$ {calcularTotal(dados.filter(dado => dado.categoria.cat_nome === abaAtiva))}</h3>
             </div>
         </Fragment>
     );

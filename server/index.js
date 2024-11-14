@@ -1,182 +1,45 @@
-const express = require('express')
-const cors = require('cors')
-const pool = require('./db')
-const app = express()
-const port = 5001;
-const host = 'localhost';
-
-//const host = '185.245.180.67';
-
-//middlewares
-app.use(cors());
-app.use(express.json())
+const express = require('express');
+const app = express();
+const helmet = require('helmet');
+const cors = require('cors'); // Importando o pacote CORS
 
 
-// Rotas
+// Importando as rotas
+const transacoesRoutes = require('./routes/transacoes');
+const remetentesRoutes = require('./routes/remetentes');
+const metodosPagamentoRoutes = require('./routes/metodosPagamento');
+const categoriasRoutes = require('./routes/categorias');
+const subcategoriasRoutes = require('./routes/subcategorias');
+const classesRoutes = require('./routes/classes');
+const subclassesRoutes = require('./routes/subclasses');
 
-// app.get('/gerenciador-financeiro', (req, res) => {
-//     res.send('acessado com sucesso!')
-// })
+// Importando o middleware de tratamento de erros
+const errorHandler = require('./utils/errorHandling'); // Deve ser uma função
 
+// Usando Helmet para segurança
+app.use(helmet());
 
-// inserir item
-app.post("/gerenciador-financeiro", async (req, res) => {// app postar no caminho "/todos", func assincrona(par_requisicao, par_resposta) funcao de flecha
-    try {// tente 
-        const { 
-            descricao,
-            valor,
-            metodo,
-            remetente,
-            categoria,
-            subcategoria,
-            classe,
-            subclasse,
-            dataGregoriana,
-            /*
-            sincronario,
-            plasma,
-            heptal,
-            lua*/
-         } = req.body;// const { descricao } valor igual  ao par_respost chamar corpo
+// Usando CORS para permitir requisições de outros domínios
+app.use(cors()); // Permitir requisições de qualquer origem
 
-         const inserirDados = `
-         INSERT INTO receitabruta (
-             descricao,
-             valor,
-             metodo,
-             remetente,
-             categoria,
-             subcategoria,
-             classe,
-             subclasse,
-             dataGregoriana
-         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;
-     `;
-     
+// Middleware para interpretar JSON
+app.use(express.json());
 
-        // const novoAfazer = aguarde consulta de pool("INSERIR EM afazer (tabela_descricao) VALORES($1) RETORNANDO *")
-        const inserirItem = await pool.query(inserirDados, [
-            descricao,
-            valor,
-            metodo,
-            remetente,
-            categoria,
-            subcategoria,
-            classe,
-            subclasse,
-            dataGregoriana
-            /*  
-            sincronario,
-            plasma,
-            heptal,
-            lua
-            */
-        ]// const inserirItem
-        )
-        res.json(inserirItem.rows[0]);// par_resposta chamar metodo json em(novoAfazer chamar linhas[indice_0])
-    } catch (error){
-        // console.error(error.message)
-        console.log(error.message)
-    }
+// Definindo as rotas
+// Definir rotas para transações
+app.use('/transacoes', transacoesRoutes);
+app.use('/remetentes', remetentesRoutes);
+app.use('/metodos-pagamento', metodosPagamentoRoutes);
+app.use('/categorias', categoriasRoutes);
+app.use('/subcategorias', subcategoriasRoutes);
+app.use('/classes', classesRoutes);
+app.use('/subclasses', subclassesRoutes);
 
-})
+// Middleware de tratamento de erros
+app.use(errorHandler);  // Middleware deve ser uma função
 
-// listar item especifico
-app.get("/gerenciador-financeiro/:id", async (req, res) => {
-    try {
-        const { id } = req.params;
-        const listarItem = await pool.query("SELECT * FROM receitabruta WHERE id = $1", [id])
-        res.json(listarItem.rows[0])
-        res.json("Item criado com sucesso!")
-
-    } catch (error) {
-        console.log(error.message)
-    }
-})
-
-// listar todos os itens
-app.get("/gerenciador-financeiro", async (req, res) => {
-    try {
-        const { id } = req.params;
-        const listarItens = await pool.query("SELECT * FROM receitabruta")
-        res.json(listarItens.rows)
-    } catch (error) {
-        console.log(error.message)
-    }
-})
-
-// atualizar item
-app.put("/gerenciador-financeiro/:id", async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { 
-            descricao,
-            valor,
-            metodo,
-            remetente,
-            categoria,
-            subcategoria,
-            classe,
-            subclasse,
-            dataGregoriana
-            /*
-            sincronario,
-            plasma,
-            heptal,
-            lua
-        */ } = req.body// const { descricao } valor igual ao par_respost chamar corpo
-        
-        const atualizarDados = `
-        UPDATE receitabruta SET
-            descricao = $1,
-            valor = $2,
-            metodo = $3,
-            remetente = $4,
-            categoria = $5,
-            subcategoria = $6,
-            classe = $7,
-            subclasse = $8,
-            dataGregoriana = $9
-        WHERE id = $10;
-    `;
-    
-        const atualizarItem = await pool.query(atualizarDados, [ 
-            descricao,
-            valor,
-            metodo,
-            remetente,
-            categoria,
-            subcategoria,
-            classe,
-            subclasse,
-            dataGregoriana,
-            /*
-            sincronario,
-            plasma,
-            heptal,
-            lua,
-            */
-            id
-        ])
-        res.json("Item atualizado com sucesso!")
-    } catch (error) {
-        console.log(error.message)
-    }
-})
-
-// deletar item
-app.delete("/gerenciador-financeiro/:id", async (req, res) => {
-    try {
-        const { id } = req.params;
-        const deletarDado = `
-            DELETE FROM receitabruta WHERE id = $1;
-        `;
-        const deletarItem = await pool.query(deletarDado, [id])
-        res.json("Item deletado com sucesso!")
-    } catch (error) {
-        
-    }
-})
-app.listen(port, () => {
-    console.log(`O servidor está rodando em http://${host}:${port}/gerenciador-financeiro/`)
-})
+// Definindo a porta do servidor
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
