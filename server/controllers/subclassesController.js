@@ -13,7 +13,17 @@ const listarSubclasses = async (req, res, next) => {
     try {
         const { page = 1, limit = 10 } = req.query;
         const offset = (page - 1) * limit;
-        const query = `SELECT * FROM subclasses LIMIT $1 OFFSET $2`;
+        const query = `
+              SELECT 
+                scl.id,
+                scl.subclasse_nome,
+                scl.classe_id,
+                cl.classe_nome AS classe_nome
+            FROM 
+                subclasses scl
+            JOIN classes cl ON scl.classe_id = cl.id  -- Corrigido o JOIN
+            LIMIT $1 OFFSET $2;
+        `;  
         const result = await pool.query(query, [limit, offset]);
         res.json(result.rows);
     } catch (err) {

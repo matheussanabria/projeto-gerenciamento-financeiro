@@ -8,6 +8,8 @@ const cors = require('cors'); // Importando o pacote CORS
 const transacoesRoutes = require('./routes/transacoes');
 const remetentesRoutes = require('./routes/remetentes');
 const metodosPagamentoRoutes = require('./routes/metodosPagamento');
+const parcelamentoRoutes = require('./routes/parcelamentos');
+const contasRoutes = require('./routes/contasRoute');
 const categoriasRoutes = require('./routes/categorias');
 const subcategoriasRoutes = require('./routes/subcategorias');
 const classesRoutes = require('./routes/classes');
@@ -30,6 +32,8 @@ app.use(express.json());
 app.use('/transacoes', transacoesRoutes);
 app.use('/remetentes', remetentesRoutes);
 app.use('/metodos-pagamento', metodosPagamentoRoutes);
+app.use('/parcelamentos', parcelamentoRoutes)
+app.use('/contas', contasRoutes);
 app.use('/categorias', categoriasRoutes);
 app.use('/subcategorias', subcategoriasRoutes);
 app.use('/classes', classesRoutes);

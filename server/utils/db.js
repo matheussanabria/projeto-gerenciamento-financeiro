@@ -1,22 +1,10 @@
 const { Pool } = require('pg');
 const pool = new Pool ({
-    user: "postgres",
-    /* u302104969_economista */
-    password: "1234",
-    /* 0rgFinPessoal */
-    host: "127.0.0.1",
-    /* 127.0.0.1 */
-    port: 5432,
-    /* 3306 */
-    database: "gerenciamentoFinanceiro"
-    /*u302104969_gerFinanceiro*/
-    /*
-    user: 'u302104969_economista',
-    password: "0rgFinPessoal",
-    host: "mysql.hostinger.com",  // Atualize este valor conforme necessário
-    port: 3306,
-    database: 'u302104969_gerFinanceiro'
-    */
+    user: "postgres", // usuario 
+    password: "2503", // senha
+    host: "127.0.0.1", // anfitriao
+    port: 5432, // porta no banco de dados
+    database: "gerenciamento_financeiro" // banco de dados
 })
 
 module.exports = {

@@ -13,13 +13,22 @@ const listarSubcategorias = async (req, res, next) => {
     try {
         const { page = 1, limit = 10 } = req.query;
         const offset = (page - 1) * limit;
-        const query = `SELECT * FROM subcategorias LIMIT $1 OFFSET $2`;
+        const query = `SELECT 
+                sc.id AS subcategoria_id,
+                sc.subcategoria_nome,
+                sc.categoria_id,
+                c.categoria_nome AS categoria_nome
+            FROM 
+                subcategorias sc
+            JOIN categorias c ON sc.categoria_id = c.id
+            LIMIT $1 OFFSET $2;`;  // Corrigido o JOIN
         const result = await pool.query(query, [limit, offset]);
         res.json(result.rows);
     } catch (err) {
         next(err);
     }
 };
+
 
 // Obter uma categoria por ID
 const obterSubcategoria = async (req, res, next) => {

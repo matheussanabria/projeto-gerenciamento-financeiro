@@ -4,10 +4,12 @@ import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 import { Modal, Button, Form } from 'react-bootstrap';
 
 const EditarDados = ({ dado, onUpdate }) => {
-    const [descricao, setDescricao] = useState(dado.descricao);
+    const [transacao_descricao, setTransacaoDescricao] = useState(dado.transacao_descricao);
     const [valor, setValor] = useState(dado.valor);
-    const [metodo_pagamento_id, setMetodoPagamento] = useState(dado.metodo_pagamento_id);
     const [remetente_id, setRemetente_id] = useState(dado.remetente_id);
+    const [metodo_pagamento_id, setMetodoPagamento] = useState(dado.metodo_pagamento_id);
+    const [parcelamento_id, setParcelamento] = useState(dado.parcelamento_id);
+    const [conta_id, setConta] = useState(dado.conta_id);
     const [categoria_id, setCategoriaId] = useState(dado.subcategoria_id);
     const [subcategoria_id, setSubcategoriaId] = useState(dado.subcategoria_id);
     const [classe_id, setClasse] = useState(dado.classe_id);
@@ -16,6 +18,8 @@ const EditarDados = ({ dado, onUpdate }) => {
     
     // Estado para armazenar as opções dinâmicas
     const [metodosPagamento, setMetodosPagamento] = useState([]);
+    const [parcelamentos, setParcelamentos] = useState([]);
+    const [contas, setContas] = useState([]);
     const [categorias, setCategorias] = useState([]);
     const [subcategorias, setSubcategorias] = useState([]);
     const [classes, setClasses] = useState([]);
@@ -24,18 +28,24 @@ const EditarDados = ({ dado, onUpdate }) => {
     const obterOpcoes = async () => {
         try {
             const metodosResposta = await fetch('http://localhost:5001/metodos-pagamento/');
+            const parcelamentosResposta = await fetch('http://localhost:5001/parcelamentos/');
+            const contasResposta = await fetch('http://localhost:5001/contas/');
             const categoriasResposta = await fetch('http://localhost:5001/categorias/');
             const subcategoriasResposta = await fetch('http://localhost:5001/subcategorias/');
             const classesResposta = await fetch('http://localhost:5001/classes/');
             const subclassesResposta = await fetch('http://localhost:5001/subclasses/');
 
             const metodosJson = await metodosResposta.json();
+            const parcelamentosJson = await parcelamentosResposta.json();
+            const contasJson = await contasResposta.json();
             const categoriasJson = await categoriasResposta.json();
             const subcategoriasJson = await subcategoriasResposta.json();
             const classesJson = await classesResposta.json();
             const subclassesJson = await subclassesResposta.json();
 
             setMetodosPagamento(metodosJson);
+            setParcelamentos(parcelamentosJson)
+            setContas(contasJson)
             setCategorias(categoriasJson);
             setSubcategorias(subcategoriasJson);
             setClasses(classesJson);
@@ -54,10 +64,12 @@ const EditarDados = ({ dado, onUpdate }) => {
 
         try {
             const body = {
-                descricao,
+                transacao_descricao,
                 valor,
-                metodo_pagamento_id,
                 remetente_id,
+                metodo_pagamento_id,
+                parcelamento_id,
+                conta_id,
                 categoria_id,
                 subcategoria_id,
                 classe_id,
@@ -75,109 +87,147 @@ const EditarDados = ({ dado, onUpdate }) => {
         } catch (error) {
             console.log(error);
         }
+
     };
 
     return (
         <Fragment>
-            <button
-                type="button"
-                className="btn btn-warning"
-                data-bs-toggle="modal"
-                data-bs-target={`#id${dado.id}`}
-            >
-                <FontAwesomeIcon icon={faPenToSquare} style={{ color: "#ffffff", fontSize: "17px" }} />
-            </button>
-            <div className="modal" id={`id${dado.id}`}>
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h4>Editar operação</h4>
-                            <button type="button" className="close" data-bs-dismiss="modal">X</button>
-                        </div>
-                        <div className="modal-body">
-                            <Form onSubmit={atualizarDados}>
-                                <Form.Group controlId="descricao">
-                                    <Form.Label>Descrição</Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        value={descricao}
-                                        onChange={e => setDescricao(e.target.value)}
-                                    />
-                                </Form.Group>
-                                <Form.Group controlId="valor">
-                                    <Form.Label>Valor</Form.Label>
-                                    <Form.Control
-                                        type="number"
-                                        value={valor}
-                                        onChange={e => setValor(e.target.value)}
-                                    />
-                                </Form.Group>
-                                <Form.Group controlId="metodo_pagamento_id">
-                                    <Form.Label>Método de Pagamento</Form.Label>
-                                    <Form.Control as="select" value={metodo_pagamento_id} onChange={e => setMetodoPagamento(e.target.value)}>
-                                        <option value="">Selecione o método</option>
-                                        {metodosPagamento.map(m => (
-                                            <option key={m.id} value={m.nome}>{m.nome}</option>
-                                        ))}
-                                    </Form.Control>
-                                </Form.Group>
-                                <Form.Group controlId="remetente_id">
-                                    <Form.Label>Remetente</Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        value={remetente_id}
-                                        onChange={e => setRemetente_id(e.target.value)}
-                                    />
-                                </Form.Group>
-                                <Form.Group controlId="categoria_id">
-                                    <Form.Label>Categoria</Form.Label>
-                                    <Form.Control as="select" value={categoria_id} onChange={e => setCategoriaId(e.target.value)}>
-                                        <option value="">Selecione a subcategoria</option>
-                                        {categorias.map(cat => (
-                                            <option key={cat.id} value={cat.id}>{cat.nome}</option>
-                                        ))}
-                                    </Form.Control>
-                                </Form.Group>
-                                <Form.Group controlId="subcategoria_id">
-                                    <Form.Label>Subcategoria</Form.Label>
-                                    <Form.Control as="select" value={subcategoria_id} onChange={e => setSubcategoriaId(e.target.value)}>
-                                        <option value="">Selecione a subcategoria</option>
-                                        {subcategorias.map(s => (
-                                            <option key={s.id} value={s.id}>{s.nome}</option>
-                                        ))}
-                                    </Form.Control>
-                                </Form.Group>
-                                <Form.Group controlId="classe_id">
-                                    <Form.Label>Classe</Form.Label>
-                                    <Form.Control as="select" value={classe_id} onChange={e => setClasse(e.target.value)}>
-                                        <option value="">Selecione a classe</option>
-                                        {classes.map(c => (
-                                            <option key={c.id} value={c.id}>{c.nome}</option>
-                                        ))}
-                                    </Form.Control>
-                                </Form.Group>
-                                <Form.Group controlId="subclasse_id">
-                                    <Form.Label>Subclasse</Form.Label>
-                                    <Form.Control as="select" value={subclasse_id} onChange={e => setSubclasse(e.target.value)}>
-                                        <option value="">Selecione a subclasse</option>
-                                        {subclasses.map(s => (
-                                            <option key={s.id} value={s.id}>{s.nome}</option>
-                                        ))}
-                                    </Form.Control>
-                                </Form.Group>
-                                <Form.Group controlId="data">
-                                    <Form.Label>Data</Form.Label>
-                                    <Form.Control
-                                        type="date"
-                                        value={data}
-                                        onChange={e => setData(e.target.value)}
-                                    />
-                                </Form.Group>
-                                <Button type="submit">Editar</Button>
-                            </Form>
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+            <div className="componenteEditar">
+                <button
+                    type="button"
+                    className="btn btn-warning"
+                    data-bs-toggle="modal"
+                    data-bs-target={`#id${dado.id}`}
+                >
+                    <FontAwesomeIcon icon={faPenToSquare} style={{ color: "#ffffff", fontSize: "17px" }} />
+                </button>
+                <div className="modal" id={`id${dado.id}`}>
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h4>Editar operação</h4>
+                                <button type="button" className="close" data-bs-dismiss="modal">X</button>
+                            </div>
+                            <div className="modal-body">
+                                <Form onSubmit={atualizarDados}>
+                                    <Form.Group controlId="transacao_descricao">
+                                        <Form.Label>Descrição</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            value={transacao_descricao}
+                                            onChange={e => setTransacaoDescricao(e.target.value)}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group controlId="valor">
+                                        <Form.Label>Valor</Form.Label>
+                                        <Form.Control
+                                            type="number"
+                                            value={valor}
+                                            onChange={e => setValor(e.target.value)}
+                                        />
+                                    </Form.Group>
+                                    
+                                    <Form.Group controlId="remetente_id">
+                                        <Form.Label>Remetente</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            value={remetente_id}
+                                            onChange={e => setRemetente_id(e.target.value)}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group controlId="metodo_pagamento_id">
+                                        <Form.Label>Método de Pagamento</Form.Label>
+                                        <Form.Control as="select" value={metodo_pagamento_id} onChange={e => setMetodoPagamento(e.target.value)}>
+                                            <option value="">Selecione o método</option>
+                                            {metodosPagamento.map(m => (
+                                                <option key={m.id} value={m.nome}>{m.nome}</option>
+                                            ))}
+                                        </Form.Control>
+                                    </Form.Group>
+                                    <Form.Group controlId="pagamento_id">
+                                        <Form.Label>Parcelamento</Form.Label>
+                                        <Form.Control 
+                                            as="select" 
+                                            value={parcelamento_id} 
+                                            onChange={e => setParcelamento(e.target.value)}
+                                        >
+                                            {/* Exibe o valor atual do parcelamento se ele existir */}
+                                            {parcelamento_id ? (
+                                                <option value={parcelamento_id}>
+                                                    {parcelamento_id} {/* Exibe o nome atual */}
+                                                </option>
+                                            ) : (
+                                                <option value="">Selecione o método</option>
+                                            )}
+
+                                            {/* Lista os outros parcelamentos */}
+                                            {parcelamentos.map(p => (
+                                                <option key={p.id} value={p.nome}>
+                                                    {p.nome}
+                                                </option>
+                                            ))}
+                                        </Form.Control>
+                                    </Form.Group>
+
+                                    <Form.Group controlId="conta_id">
+                                        <Form.Label>Conta</Form.Label>
+                                        <Form.Control as="select" value={conta_id} onChange={e => setConta(e.target.value)}>
+                                            <option value="">Selecione a conta</option>
+                                            {contas.map(co => (
+                                                <option key={co.id} value={co.nome}>{co.nome}</option>
+                                            ))}
+                                        </Form.Control>
+                                    </Form.Group>
+                                    <Form.Group controlId="categoria_id">
+                                        <Form.Label>Categoria</Form.Label>
+                                        <Form.Control as="select" value={categoria_id} onChange={e => setCategoriaId(e.target.value)}>
+                                            <option value="">Selecione a subcategoria</option>
+                                            {categorias.map(cat => (
+                                                <option key={cat.id} value={cat.id}>{cat.nome}</option>
+                                            ))}
+                                        </Form.Control>
+                                    </Form.Group>
+                                    <Form.Group controlId="subcategoria_id">
+                                        <Form.Label>Subcategoria</Form.Label>
+                                        <Form.Control as="select" value={subcategoria_id} onChange={e => setSubcategoriaId(e.target.value)}>
+                                            <option value="">Selecione a subcategoria</option>
+                                            {subcategorias.map(s => (
+                                                <option key={s.id} value={s.id}>{s.nome}</option>
+                                            ))}
+                                        </Form.Control>
+                                    </Form.Group>
+                                    <Form.Group controlId="classe_id">
+                                        <Form.Label>Classe</Form.Label>
+                                        <Form.Control as="select" value={classe_id} onChange={e => setClasse(e.target.value)}>
+                                            <option value="">Selecione a classe</option>
+                                            {classes.map(c => (
+                                                <option key={c.id} value={c.id}>{c.nome}</option>
+                                            ))}
+                                        </Form.Control>
+                                    </Form.Group>
+                                    <Form.Group controlId="subclasse_id">
+                                        <Form.Label>Subclasse</Form.Label>
+                                        <Form.Control as="select" value={subclasse_id} onChange={e => setSubclasse(e.target.value)}>
+                                            <option value="">Selecione a subclasse</option>
+                                            {subclasses.map(s => (
+                                                <option key={s.id} value={s.id}>{s.nome}</option>
+                                            ))}
+                                        </Form.Control>
+                                    </Form.Group>
+                                    <Form.Group controlId="data">
+                                        <Form.Label>Data</Form.Label>
+                                        <Form.Control
+                                            type="date"
+                                            value={data}
+                                            onChange={e => setData(e.target.value)}
+                                        />
+                                    </Form.Group>
+                                    <Button type="submit">Editar</Button>
+                                </Form>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+                            </div>
                         </div>
                     </div>
                 </div>
