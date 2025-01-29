@@ -172,9 +172,9 @@ const ListarDados = () => {
                             <button 
                                 key={aba.id} // Adicionando uma key única para cada aba
                                 className={`tab-button ${abaAtiva === aba.cat_nome ? 'active' : ''}`} 
-                                onClick={() => definirAbaAtiva(aba.cat_nome)}
+                                onClick={() => definirAbaAtiva(aba.nome)}
                             >
-                                {aba.cat_nome}
+                                {aba.nome}
                             </button>
                         ))}
                     </div>
@@ -242,7 +242,7 @@ const ListarDados = () => {
                                 >
                                     <option value="">Selecione a subcategoria</option>
                                     {subcategorias.map((subcategoria) => (
-                                        <option key={subcategoria.id} value={subcategoria.id}>{subcategoria.subcat_nome}</option>
+                                        <option key={subcategoria.id} value={subcategoria.id}>{subcategoria.subnome}</option>
                                     ))}
                                 </Form.Control>
                             </Form.Group>
@@ -301,7 +301,7 @@ const ListarDados = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {dados.filter(dado => dado.categoria.cat_nome === abaAtiva).map((dado) => (
+                        {dados.filter(dado => dado.categoria.name === abaAtiva).map((dado) => (
                             <tr key={dado.id}>
                                 <td>{dado.descricao}</td>
                                 <td>{dado.valor}</td>
@@ -317,7 +317,7 @@ const ListarDados = () => {
                         ))}
                     </tbody>
                 </table>
-                <h3>Total: R$ {calcularTotal(dados.filter(dado => dado.categoria.cat_nome === abaAtiva))}</h3>
+                <h3>Total: R$ {calcularTotal(dados.filter(dado => dado.categoria.nome === abaAtiva))}</h3>
             </div>
         </Fragment>
     );
