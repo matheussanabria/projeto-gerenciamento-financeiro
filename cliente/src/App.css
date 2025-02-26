@@ -14,6 +14,9 @@ h1,h2,h3,h4,h5,h6{
   margin: 0;
 }
 
+h1{
+  font-size: 2rem;
+}
 /* classes auxiliares */
 .centro{
   /* max-width: 1080px; */
@@ -25,14 +28,12 @@ h1,h2,h3,h4,h5,h6{
   gap: 40px;
 }
 
-.app {
-  display: flex;
-}
-
 .sidebar {
+  display: flex;
+  flex-direction: column;
   width: 250px;
   height: 100vh;
-  background-color: #2c3e50;
+  background-color: #066efd;
   color: #ecf0f1;
   padding: 20px;
   position: fixed;
@@ -40,16 +41,11 @@ h1,h2,h3,h4,h5,h6{
 
 .sidebar h2 {
   text-align: center;
-  margin-bottom: 30px;
 }
 
 .sidebar nav ul {
   list-style: none;
   padding: 0;
-}
-
-.sidebar nav ul li {
-  margin: 15px 0;
 }
 
 .sidebar nav ul li a {
@@ -60,14 +56,29 @@ h1,h2,h3,h4,h5,h6{
 
 .sidebar nav ul li a.active {
   font-weight: bold;
-  color: #3498db;
 }
 
-.content {
-  margin-left: 250px;
-  padding: 20px;
+/* Ajuste global da aplicação */
+.app {
+  display: flex;
   width: 100%;
 }
+
+/* Conteúdo principal */
+.content {
+  flex-grow: 1;
+  margin-left: 60px; /* Sidebar fechada */
+  /* padding: 20px; */
+  transition: margin-left 0.3s ease-in-out;
+  width: calc(100% - 60px);
+}
+
+/* Quando a sidebar está aberta */
+.content-expanded {
+  margin-left: 250px;
+  width: calc(100% - 250px);
+}
+
 
 .fade{
   background-color: rgba(0, 0, 0, 0.5);
@@ -247,11 +258,6 @@ h4{
   font-weight: bold;
 }
 
-.content {
-  padding-top: 20px;
-}
-
-
 .gastos, .ganhos{
   width: 100%;
   display: flex;
@@ -363,7 +369,9 @@ h4{
 
 td:last-of-type {
   display: flex;
-  justify-content: space-evenly;
+  flex-wrap: wrap;
+  /* flex-flow: column; */
+  gap: 5px;
 }
 .btn-warning {
   background-color: #ffd86494!important;

@@ -12,8 +12,8 @@ const listarCategorias = async (req, res, next) => {
     try {
         const { page = 1, limit = 10 } = req.query;
         const offset = (page - 1) * limit;
-        const query = `SELECT * FROM categorias LIMIT $1 OFFSET $2`;
-        const result = await pool.query(query, [limit, offset]);
+        const query = `SELECT * FROM categorias`;
+        const result = await pool.query(query);
         res.json(result.rows);
     } catch (err) {
         next(err); // Passa o erro para o middleware de erro

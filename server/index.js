@@ -8,6 +8,7 @@ const cors = require('cors'); // Importando o pacote CORS
 const transacoesRoutes = require('./routes/transacoes');
 const remetentesRoutes = require('./routes/remetentes');
 const metodosPagamentoRoutes = require('./routes/metodosPagamento');
+const formasPagamentoRoutes = require('./routes/formasPagamento');
 const parcelamentoRoutes = require('./routes/parcelamentos');
 const contasRoutes = require('./routes/contasRoute');
 const categoriasRoutes = require('./routes/categorias');
@@ -21,7 +22,7 @@ const errorHandler = require('./utils/errorHandling'); // Deve ser uma função
 // Usando Helmet para segurança
 app.use(helmet());
 
-// Usando CORS para permitir requisições de outros domínios
+// Usando CORS para permitir    requisições de outros domínios
 app.use(cors()); // Permitir requisições de qualquer origem
 
 // Middleware para interpretar JSON
@@ -32,6 +33,7 @@ app.use(express.json());
 app.use('/transacoes', transacoesRoutes);
 app.use('/remetentes', remetentesRoutes);
 app.use('/metodos-pagamento', metodosPagamentoRoutes);
+app.use('/formas-pagamento', formasPagamentoRoutes);
 app.use('/parcelamentos', parcelamentoRoutes)
 app.use('/contas', contasRoutes);
 app.use('/categorias', categoriasRoutes);

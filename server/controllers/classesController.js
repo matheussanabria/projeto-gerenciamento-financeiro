@@ -12,18 +12,20 @@ const listarClasses = async (req, res, next) => {
     try {
         const { page = 1, limit = 10 } = req.query;
         const offset = (page - 1) * limit;
-        const query = `
-            SELECT 
-                cl.id,
-                cl.classe_nome,
-                cl.subcategoria_id,
-                sc.subcategoria_nome AS subcategoria_nome
-            FROM 
-                classes cl
-            JOIN subcategorias sc ON cl.subcategoria_id = sc.id  -- Corrigido o JOIN
-            LIMIT $1 OFFSET $2;
-        `;  
-        const result = await pool.query(query, [limit, offset]);
+        const query = `SELECT * from classes`;
+
+        // const query = `
+        //     SELECT 
+        //         cl.id,
+        //         cl.classe_nome,
+        //         cl.subcategoria_id,
+        //         sc.subcategoria_nome AS subcategoria_nome
+        //     FROM 
+        //         classes cl
+        //     JOIN subcategorias sc ON cl.subcategoria_id = sc.id  -- Corrigido o JOIN
+        //     LIMIT $1 OFFSET $2;
+        // `;  
+        const result = await pool.query(query);
         res.json(result.rows);
     } catch (err) {
         next(err);

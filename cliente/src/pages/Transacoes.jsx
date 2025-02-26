@@ -18,7 +18,7 @@ const ListarDados = () => {
         descricao: '', // Descrição da transação
         valor: '', // Valor da transação
         remetente_nome: '', // Identificador do remetente
-        metodo_pagamento_nome: '', // Identificador do método de pagamento
+        transacao_pagamento: '', // Identificador do método de pagamento
         numero_parcelas: '', // Identificador do parcelamento
         conta_nome: '', // Identificador da conta
         categoria_nome: '', // Identificador da categoria
@@ -31,6 +31,7 @@ const ListarDados = () => {
     // Outros estados que armazenam listas de opções para preencher os campos do formulário
     const [remetentes, setRemetentes] = useState([]);
     const [metodosPagamento, setMetodosPagamento] = useState([]);
+    const [formasPagamento, setFormasPagamento] = useState([]);
     const [parcelamentos, setParcelamentos] = useState([]);
     const [contas, setContas] = useState([]);
     const [categorias, setCategorias] = useState([]);
@@ -56,7 +57,8 @@ const ListarDados = () => {
         try {
             // Requisições para pegar dados do backend
             const remetentesResposta = await fetch('http://localhost:5001/remetentes/');
-            const metodosResposta = await fetch('http://localhost:5001/metodos-pagamento/');
+            const metodosPagamentoResposta = await fetch('http://localhost:5001/metodos-pagamento/');
+            const formasPagamentoResposta = await fetch('http://localhost:5001/formas-pagamento/');
             const parcelamentosResposta = await fetch('http://localhost:5001/parcelamentos/');
             const contasResposta = await fetch('http://localhost:5001/contas/');
             const categoriasResposta = await fetch('http://localhost:5001/categorias/');
@@ -66,7 +68,8 @@ const ListarDados = () => {
 
             // Converte a resposta em JSON (formato que o React pode entender)
             const remetentesJson = await remetentesResposta.json();
-            const metodosJson = await metodosResposta.json();
+            const metodosJson = await metodosPagamentoResposta.json();
+            const formasJson = await formasPagamentoResposta.json();
             const parcelamentosJson = await parcelamentosResposta.json();
             const contasJson = await contasResposta.json();
             const categoriasJson = await categoriasResposta.json();
@@ -77,6 +80,7 @@ const ListarDados = () => {
             // Atualiza os estados com os dados obtidos
             setRemetentes(remetentesJson);
             setMetodosPagamento(metodosJson);
+            setFormasPagamento(formasJson);
             setParcelamentos(parcelamentosJson);
             setContas(contasJson);
             setCategorias(categoriasJson);
@@ -150,7 +154,7 @@ const ListarDados = () => {
     }
 
     // Encontrar a categoria ativa com base nas abas
-    let categoria = abas.find(aba => aba && aba.categoria_nome === abaAtiva);
+    let categoria = abas.find(aba => aba && aba.nome === abaAtiva);
     
     // Se a categoria não existir, cria uma nova com ID gerado
     if (!categoria) {
@@ -161,8 +165,8 @@ const ListarDados = () => {
         
         // Criação de uma nova categoria (se necessário)
         categoria = {
-            categoria_nome: abaAtiva,
-            categoria_id: novoId,
+            nome: abaAtiva,
+            id: novoId,
         };
 
         // Exemplo de adição do novo ID à lista de abas, se você quiser que ela seja atualizada
@@ -196,7 +200,7 @@ const ListarDados = () => {
             descricao: '',
             valor: '',
             remetente_nome: '',
-            metodo_pagamento_nome: '',
+            transacao_pagamento: '',
             numero_parcelas: '',
             conta_nome: '',
             categoria_nome: '',
@@ -250,10 +254,10 @@ const generateNewId = () => {
                         {abas.map((aba) => (
                             <button 
                             key={aba.id}
-                            className={`tab-button ${abaAtiva === aba.categoria_nome ? 'active' : ''}`} 
-                            onClick={() => definirAbaAtiva(aba.categoria_nome)}
+                            className={`tab-button ${abaAtiva === aba.nome ? 'active' : ''}`} 
+                            onClick={() => definirAbaAtiva(aba.nome)}
                         >
-                            {aba.categoria_nome}
+                            {aba.nome}
                         </button>
                         
                         ))}  
@@ -306,18 +310,19 @@ const generateNewId = () => {
                                     ))}
                                 </Form.Control>
                             </Form.Group>
+
                             <Form.Group className="form-group" controlId="metodo">
-                                <Form.Label>Método de Pagamento</Form.Label>
+                                <Form.Label>Formas de Pagamento</Form.Label>
                                 <Form.Control 
                                     className="form-input" 
                                     as="select"
-                                    name="metodo_pagamento_nome"
-                                    value={novoDado.metodo_pagamento_nome}
+                                    name="transacao_pagamento"
+                                    value={novoDado.transacao_pagamento}
                                     onChange={handleInputChange}
                                 >
                                     <option value="">Selecione o método</option>
-                                    {metodosPagamento.map((metodo) => (
-                                        <option key={metodo.id} value={metodo.nome}>{metodo.nome}</option>
+                                    {formasPagamento.map((forma) => (
+                                        <option key={forma.id} value={forma.nome}>{forma.nome}</option>
                                     ))}
                                 </Form.Control>
                             </Form.Group>
@@ -354,7 +359,7 @@ const generateNewId = () => {
                                 >
                                     <option value="">Selecione a categoria</option>
                                     {categorias.map((cat) => (
-                                        <option key={cat.id} value={cat.categoria_nome}>{cat.categoria_nome}</option>
+                                        <option key={cat.id} value={cat.nome}>{cat.nome}</option>
                                     ))}
                                 </Form.Control>
                             </Form.Group>
@@ -370,7 +375,7 @@ const generateNewId = () => {
                                 >
                                     <option value="">Selecione a subcategoria</option>
                                     {subcategorias.map((subCat) => (
-                                        <option key={subCat.subcategoria_nome} value={subCat.subcategoria_nome}>{subCat.subcategoria_nome}</option>
+                                        <option key={subCat.id} value={subCat.id}>{subCat.nome}</option>
                                     ))}
                                 </Form.Control>
                             </Form.Group>
@@ -440,10 +445,10 @@ const generateNewId = () => {
                     <tbody>
                         {dados.filter(dado => dado.categoria_nome === abaAtiva).map((dado) => (
                             <tr key={dado.id}>
-                                <td>{dado.transacao_descricao}</td>
+                                <td>{dado.descricao}</td>
                                 <td>{dado.valor}</td>
                                 <td>{dado.remetente_nome}</td>
-                                <td>{dado.metodo_pagamento_nome}</td>
+                                <td>{dado.transacao_pagamento}</td>
                                 <td>{dado.numero_parcelas}</td>
                                 <td>{dado.conta_nome}</td>
                                 <td>{dado.subcategoria_nome}</td>

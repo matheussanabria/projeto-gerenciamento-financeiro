@@ -25,6 +25,16 @@ const HomePage = () => {
 
                         <Col md={4} className="mb-4">
                             <div className="home-feature">
+                                <h3>Remetentes</h3>
+                                <p>Visualize e gerencie todas as suas transações financeiras.</p>
+                                <Button variant="primary" as={Link} to="/transacoes">
+                                    Ver Remetentes
+                                </Button>
+                            </div>
+                        </Col>
+
+                        <Col md={4} className="mb-4">
+                            <div className="home-feature">
                                 <h3>Relatórios</h3>
                                 <p>Acompanhe gráficos e relatórios detalhados das suas finanças.</p>
                                 <Button variant="primary" as={Link} to="/relatorios">

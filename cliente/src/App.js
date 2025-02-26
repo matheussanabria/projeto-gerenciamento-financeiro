@@ -20,23 +20,26 @@
 // }
 
 // export default App;
-
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Sidebar from './components/Sidebar';
-import Home from './pages/Home';
-import Transacoes from './pages/Transacoes';
-import './App.css';
+import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Sidebar from "./components/Sidebar";
+import Home from "./pages/Home";
+import Transacoes from "./pages/Transacoes";
+import Remetentes from "./pages/Remetentes";
+import "./App.css";
 
 const App = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   return (
     <Router>
       <div className="app">
-        <Sidebar />
-        <div className="content">
+        <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+        <div className={`content ${isSidebarOpen ? "content-expanded" : ""}`}>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/Transacoes" element={<Transacoes />} />
+            <Route path="/transacoes" element={<Transacoes />} />
+            <Route path="/remetentes" element={<Remetentes />} />
           </Routes>
         </div>
       </div>
