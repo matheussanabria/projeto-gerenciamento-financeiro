@@ -19,6 +19,46 @@ const Sidebar = () => {
             </NavLink>
           </li>
           <li>
+            <NavLink to="/contas" activeClassName="active">
+              Contas
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/remetentes" activeClassName="active">
+              Remetentes
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/servicos" activeClassName="active">
+              Serviços
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/estoque" activeClassName="active">
+              Estoque
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/movimentacao-estoque" activeClassName="active">
+              Movimentação estoque
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/caixa-comandas" activeClassName="active">
+              Caixa/Comandas
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/pagamentos" activeClassName="active">
+              Pagamentos
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/hierarquias" activeClassName="active">
+              Hierarquias
+            </NavLink>
+          </li>
+          <li>
             <NavLink to="/reports" activeClassName="active">
               Relatórios
             </NavLink>

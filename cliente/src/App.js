@@ -27,6 +27,7 @@ import Sidebar from './components/Sidebar';
 import Home from './pages/Home';
 import Transacoes from './pages/Transacoes';
 import './App.css';
+import HierarquiasPage from './pages/Hierarquias';
 
 const App = () => {
   return (
@@ -37,6 +38,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/Transacoes" element={<Transacoes />} />
+            <Route path="/Hierarquias" element={<HierarquiasPage />} />
           </Routes>
         </div>
       </div>
