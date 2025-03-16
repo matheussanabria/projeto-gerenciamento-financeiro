@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ModalSubclasses from "./ModalSubclasses"; // Próximo componente que criaremos
 import ModalAdicionarClasse from "../inserir/ModalAdicionarClasse";  // Importe o ModalAdicionarClasse
-import ModalEditarClasse from "../editar/ModalEditarClasse";  // Importe o ModalEditarClasse
+import ModalEditarClasse from "../Edit/ModalEditarClasse";  // Importe o ModalEditarClasse
 
 const ModalClasses = ({ subcategoria, classe, onClose }) => {
     const [modalAberto, setModalAberto] = useState(false);
@@ -21,7 +21,7 @@ const ModalClasses = ({ subcategoria, classe, onClose }) => {
     useEffect(() => {
         if (subcategoria) {
             setLoading(true);
-            axios.get(`http://localhost:5001/classes?subcategoria_id=${subcategoria.subcategoria_id}`)
+            axios.get(`http://localhost:5001/classes/paginacao?subcategoria_id=${subcategoria.subcategoria_id}`)
                 .then(res => {
                     setClasses(res.data);
                     setLoading(false);
@@ -38,7 +38,7 @@ const ModalClasses = ({ subcategoria, classe, onClose }) => {
         if (!window.confirm("Tem certeza que deseja excluir esta classe?")) return;
 
         try {
-            await axios.delete(`http://localhost:5001/classes/${classeId}`);
+            await axios.delete(`http://localhost:5001/classes/paginacao/${classeId}`);
             setClasses(classes.filter((cl) => cl.classe_id !== classeId)); // Remove a classe da lista
         } catch (error) {
             setError("Erro ao excluir classe.");

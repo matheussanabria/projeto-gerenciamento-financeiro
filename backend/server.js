@@ -12,7 +12,7 @@ const transacoesRoutes = require('./routes/transacoes');
 const remetentesRoutes = require('./routes/remetentes');
 const metodosPagamentoRoutes = require('./routes/metodosPagamento');
 const formasPagamentoRoutes = require('./routes/formasPagamento');
-const parcelamentoRoutes = require('./routes/parcelamentos');
+const formasParcelamentoRoutes = require('./routes/formasParcelamentos');
 const contasRoutes = require('./routes/contasRoute');
 const categoriasRoutes = require('./routes/categorias');
 const subcategoriasRoutes = require('./routes/subcategorias');
@@ -41,7 +41,7 @@ app.use('/transacoes', transacoesRoutes);
 app.use('/remetentes', remetentesRoutes);
 app.use('/metodos-pagamento', metodosPagamentoRoutes);
 app.use('/formas-pagamento', formasPagamentoRoutes);
-app.use('/parcelamentos', parcelamentoRoutes)
+app.use('/formas-parcelamento', formasParcelamentoRoutes)
 app.use('/contas', contasRoutes);
 app.use('/categorias', categoriasRoutes);
 app.use('/subcategorias', subcategoriasRoutes);

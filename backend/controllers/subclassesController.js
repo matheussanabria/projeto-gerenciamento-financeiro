@@ -9,8 +9,30 @@ const subclasseSchema = Joi.object({
     classe_id: Joi.number().integer().required()
 });
 
+const listarSubclasses = async (req, res) => {
+    try {
+        const { page = 1, limit = 10 } = req.query;
+        const offset = (page - 1) * limit;
+        const query = `
+            SELECT * FROM subclasses
+            LIMIT $1 OFFSET $2;
+
+        `
+
+        const values = [limit, offset];
+
+        const result = await pool.query(query, values);
+
+    //     const values = [subcategoria_id, limit, offset];
+
+        res.status(200).json(result.rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
 // Listar subclasses com paginação
-const listarSubclasses = async (req, res, next) => {
+const listarSubclassesPaginacao = async (req, res, next) => {
     try {
         const { page = 1, limit = 10, classe_id } = req.query;
         const offset = (page - 1) * limit;
@@ -20,10 +42,17 @@ const listarSubclasses = async (req, res, next) => {
             return res.status(400).json({ error: "classe_id é obrigatório" });
         }
         const query = `
-        SELECT ... 
+        SELECT 
+            scl.subclasse_id, 
+            scl.subclasse_nome,
+            scl.subclasse_descricao,
+            scl.classe_id, 
+            cl.classe_nome 
         FROM subclasses scl
         JOIN classes cl ON scl.classe_id = cl.classe_id
-        WHERE scl.classe_id = $1`; // Remova o ;
+        WHERE scl.classe_id = $1
+        LIMIT $2 OFFSET $3;`
+
 
         // const query = `
         //       SELECT 
@@ -75,16 +104,23 @@ const atualizarSubclasse = async (req, res, next) => {
         const { error } = subclasseSchema.validate(req.body);
         if (error) return res.status(400).json({ error: error.details[0].message });
 
-        const { nome, classe_id } = req.body;
+        const { 
+            subclasse_nome,
+            subclasse_descricao,
+            subclasse_status, 
+            classe_id 
+        } = req.body;
         const { id } = req.params;
         const query = `
         UPDATE subclasses 
         SET 
             subclasse_nome = $1, 
-            subclasse_descricao = $2, 
-            classe_id = $3 
-        WHERE subclasse_id = $4 
-        RETURNING *`;        const result = await pool.query(query, [nome, classe_id, id]);
+            subclasse_descricao = $2,
+            subclasse_status = $3,
+            classe_id = $4 
+        WHERE subclasse_id = $5 
+        RETURNING *`;        
+        const result = await pool.query(query, [subclasse_nome, subclasse_descricao, subclasse_status, classe_id, id]);
 
         if (result.rowCount === 0) {
             return res.status(404).json({ error: 'Subclasse não encontrada' });
@@ -100,8 +136,8 @@ const atualizarSubclasse = async (req, res, next) => {
 const deletarSubclasse = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const query = `DELETE FROM subclasses WHERE subclasse_id = $1 RETURNING *`; //👈 Coluna corrigida        const result = await pool.query(query, [id]);
-
+        const query = `DELETE FROM subclasses WHERE subclasse_id = $1 RETURNING *`; //👈 Coluna corrigida        
+        const result = await pool.query(query, [id]);  
         if (result.rowCount === 0) {
             return res.status(404).json({ error: 'Subclasse não encontrada' });
         }
@@ -114,6 +150,7 @@ const deletarSubclasse = async (req, res, next) => {
 
 module.exports = {
     listarSubclasses,
+    listarSubclassesPaginacao,
     criarSubclasse,
     atualizarSubclasse,
     deletarSubclasse,

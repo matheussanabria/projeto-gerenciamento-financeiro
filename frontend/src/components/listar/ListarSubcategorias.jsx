@@ -2,7 +2,12 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import LinhaSubcategoria from "./LinhaSubcategoria"; // Próximo componente que criaremos
 
-const ListarSubcategorias = ({ categoria }) => {
+const ListarSubcategorias = ({ categoria, subcategoria }) => {
+     const [modalAberto, setModalAberto] = useState(false);
+    
+    const handleAbrirModal = () => setModalAberto(true);
+    const handleFecharModal = () => setModalAberto(false);
+    
     const [subcategorias, setSubcategorias] = useState([]);
 
     useEffect(() => {
@@ -12,6 +17,18 @@ const ListarSubcategorias = ({ categoria }) => {
         }
     }, [categoria]);
     console.log("Buscando classes para categoria_id:", categoria.categoria_id);
+
+    const handleCreateSubcategoria = () => {
+        setIsCreating(true); // Ativa o modal de criação de classe
+    };
+
+    const handleNovaSubcategoriaCriada = (novaSubcategoria) => {
+        setSubcategorias([...subcategoria, novaSubcategoria]); // Adiciona a nova classe ao final da lista
+    };
+
+    const handleEditSubcategoria = (classe) => {
+        setEditingSubcategoria(classe); // Ativa o modal de edição com a classe selecionada
+    };
 
 
     return (
@@ -31,6 +48,8 @@ const ListarSubcategorias = ({ categoria }) => {
                     ))}
                 </tbody>
             </table>
+            <button className="btn adicionar" onClick={handleCreateSubcategoria}>Adicionar Subcategoria</button>
+
 
             <style jsx>{`
                 .tabela-container {
@@ -55,6 +74,10 @@ const ListarSubcategorias = ({ categoria }) => {
                     background: #007bff;
                     color: white;
                 }
+                    .btn.visualizar { background: #17a2b8; color: white; }
+                .btn.editar { background: #ffc107; color: black; }
+                .btn.excluir { background: #dc3545; color: white; }
+                .btn.adicionar { background: #28a745; color: white;}
             `}</style>
         </div>
     );

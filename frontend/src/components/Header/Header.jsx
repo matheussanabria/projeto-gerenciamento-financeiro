@@ -10,6 +10,7 @@ const Header = () => {
     '/': 'Home',
     '/remetentes': 'Remetentes',
     '/transacoes': 'Transações',
+    '/hierarquias': 'Hierarquias',
     '/configuracoes': 'Configurações'
   };
 

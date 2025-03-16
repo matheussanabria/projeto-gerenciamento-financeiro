@@ -7,22 +7,21 @@ const TransacaoModel = {
     transacao_valor,
     transacao_remetente_id,
     transacao_metodo_pagamento_id,
-    transacao_parcelamento_id,
+    transacao_forma_parcelamento_id,
     transacao_conta_id,
     transacao_categoria_id,
     transacao_subcategoria_id,
     transacao_classe_id,
     transacao_subclasse_id,
-    transacao_data,
-    transacao_forma_pagamento_id,
+    transacao_data_lancamento
   }) {
     const query = `
       INSERT INTO transacoes 
         (transacao_descricao, transacao_valor, transacao_remetente_id, transacao_metodo_pagamento_id, 
-        transacao_parcelamento_id, transacao_conta_id, transacao_categoria_id, transacao_subcategoria_id, 
-        transacao_classe_id, transacao_subclasse_id, transacao_data, transacao_forma_pagamento_id)
+        transacao_forma_parcelamento_id, transacao_conta_id, transacao_categoria_id, transacao_subcategoria_id, 
+        transacao_classe_id, transacao_subclasse_id, transacao_data_lancamento)
       VALUES 
-        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) 
+        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) 
       RETURNING *`;
     
     const values = [
@@ -30,14 +29,13 @@ const TransacaoModel = {
       transacao_valor,
       transacao_remetente_id,
       transacao_metodo_pagamento_id,
-      transacao_parcelamento_id,
+      transacao_forma_parcelamento_id,
       transacao_conta_id,
       transacao_categoria_id,
       transacao_subcategoria_id,
       transacao_classe_id,
       transacao_subclasse_id,
-      transacao_data,
-      transacao_forma_pagamento_id,
+      transacao_data_lancamento
     ];
     
     const result = await db.query(query, values);
@@ -46,7 +44,7 @@ const TransacaoModel = {
 
   // Obter todas as transações
   async getAll() {
-    const query = `SELECT * FROM view_transacoes`; // Utiliza uma VIEW para otimizar a consulta
+    const query = `SELECT * FROM transacoes`; // Utiliza uma VIEW para otimizar a consulta
     const result = await db.query(query);
     return result.rows;
   },
@@ -73,7 +71,7 @@ const TransacaoModel = {
       WHERE transacao_id = $4 
       RETURNING *`;
     
-    const result = await db.query(query, [transacao_descricao, transacao_valor, transacao_data, transacao_id]);
+    const result = await db.query(query, [transacao_descricao, transacao_valor, transacao_data_lancamento, transacao_id]);
     return result.rows[0] || null;
   },
 

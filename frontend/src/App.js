@@ -25,8 +25,12 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import Home from "./pages/Home";
 import Transacoes from "./pages/Transacoes";
+// import Contas from "./pages/Contas";
+// import Cartoes from "./pages/Cartoes";
+// import Pagamentos from "./pages/Pagamentos";
 import Remetentes from "./pages/Remetentes";
 import Hierarquias from "./pages/Hierarquias";
+// import Relatorios from "./pages/Relatorios"; 
 import "./App.css";
 
 const App = () => {
@@ -40,8 +44,12 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/transacoes" element={<Transacoes />} />
+            {/* <Route path="/contas" element={<Contas />} /> */}
+            {/* <Route path="/cartoes" element={<Cartoes />} /> */}
+            {/* <Route path="/pagamentos" element={<Pagamentos />} /> */}
             <Route path="/remetentes" element={<Remetentes />} />
             <Route path="/hierarquias" element={<Hierarquias />} />
+            {/* <Route path="/relatorios" element={<Relatorios />} /> */}
           </Routes>
         </div>
       </div>

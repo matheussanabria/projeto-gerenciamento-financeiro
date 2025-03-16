@@ -1,27 +1,32 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const ModalAdicionarSubclasse = ({ classe, onClose, onSubclasseAdicionada }) => {
-    const [subclasseNome, setSubclasseNome] = useState("");
-    const [subclasseDescricao, setSubclasseDescricao] = useState("");
+const ModalEditarClasse = ({ classe, onClose, onClasseEditada }) => {
+    const [classeNome, setClasseNome] = useState(classe.classe_nome);
+    // Alterar estado (linha 5 do front)
+    const [classeDescricao, setClasseDescricao] = useState(classe.classe_descricao);
     const [erro, setErro] = useState(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErro(null);
-
-        try {
-            const response = await axios.post('http://localhost:5001/subclasses', {
-                subclasse_nome: subclasseNome,
-                subclasse_descricao: subclasseDescricao,
-                subclasse_status: true, // Adicione se necessário
-                classe_id: classe.classe_id  // Envie "classe_id" sem o prefixo "classe_"
-            });
     
-            console.log('Classe criada com sucesso:', response.data);
-            onSubclasseAdicionada(response.data); // Atualiza a lista de classes no componente pai
-            onClose(); // Fecha o modal
-        }  catch (error) {
+        try {
+            const response = await axios.put(
+                `http://localhost:5001/classes/paginacao/${classe.classe_id}`,
+                {
+                    classe_nome: classeNome,
+                    classe_descricao: classeDescricao,
+                    classe_status: classe.classe_status || true, // Campo obrigatório
+                    subcategoria_id: classe.subcategoria_id // Campo obrigatório
+                }
+            );
+    
+            // Use os dados retornados pelo back-end para garantir consistência
+            onClasseEditada(response.data); 
+            onClose();
+        }// Front-end (ModalEditarClasse.jsx)
+        catch (error) {
             console.error("Erro detalhado:", error.response?.data || error.message);
             
             // Extrai a mensagem de erro corretamente
@@ -35,31 +40,28 @@ const ModalAdicionarSubclasse = ({ classe, onClose, onSubclasseAdicionada }) => 
             onClose(); // Opcional: fecha o modal após erro
         }
     };
-
     return (
         <div className="modal-overlay">
             <div className="modal-content">
-                <h2>Adicionar Subclasse</h2>
+                <h2>Editar Classe</h2>
                 {erro && <p className="error">{erro}</p>}
 
                 <form onSubmit={handleSubmit}>
                     <input
                         type="text"
-                        placeholder="Nome da Classe"
-                        value={subclasseNome}
-                        onChange={(e) => setSubclasseNome(e.target.value)}
+                        value={classeNome}
+                        onChange={(e) => setClasseNome(e.target.value)}
                         required
                     />
                     <textarea
-                        placeholder="Descrição"
-                        value={subclasseDescricao}
-                        onChange={(e) => setSubclasseDescricao(e.target.value)}
+                        value={classeDescricao}
+                        onChange={(e) => setClasseDescricao(e.target.value)}
                         required
                     ></textarea>
-                    <button type="submit" className="btn adicionar">Adicionar</button>
-                    <button className="btn fechar" onClick={onClose}>Fechar</button>
+                    <button type="submit" className="btn editar">Salvar</button>
+                    <button className="btn fechar" onClick={onClose}>Cancelar</button>
                     <button className="btn fechar-X" onClick={onClose}>X</button>
-                    
+
                 </form>
             </div>
 
@@ -82,10 +84,6 @@ const ModalAdicionarSubclasse = ({ classe, onClose, onSubclasseAdicionada }) => 
                     width: 500px;
                     text-align: center;
                 }
-                .table{
-                    
-                }
-
                 .btn {
                     margin: 5px;
                     padding: 10px;
@@ -93,7 +91,7 @@ const ModalAdicionarSubclasse = ({ classe, onClose, onSubclasseAdicionada }) => 
                     cursor: pointer;
                     border-radius: 5px;
                 }
-                .btn.adicionar { background: #28a745; color: white; }
+                .btn.editar { background: #ffc107; color: black; }
                 .btn.fechar { background: #007bff; color: white; }
                 .btn.fechar-X { background: #007bff; color: white; margin: 5px; position: absolute; right: 0; top: 0; }
 
@@ -110,4 +108,4 @@ const ModalAdicionarSubclasse = ({ classe, onClose, onSubclasseAdicionada }) => 
     );
 };
 
-export default ModalAdicionarSubclasse;
+export default ModalEditarClasse;

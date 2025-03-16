@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const ModalEditarClasse = ({ classe, onClose, onClasseEditada }) => {
-    const [classeNome, setClasseNome] = useState(classe.classe_nome);
+const ModalEditarSubcat = ({ categoria, subcategoria, onClose, onSubcategoriaEditada }) => {
+    const [subcategoriaNome, setsubcategoriaNome] = useState(subcategoria.subcategoria_nome);
     // Alterar estado (linha 5 do front)
-    const [classeDescricao, setClasseDescricao] = useState(classe.classe_descricao);
+    const [subcategoriaDescricao, setsubcategoriaDescricao] = useState(subcategoria.subcategoria_descricao);
     const [erro, setErro] = useState(null);
 
     const handleSubmit = async (e) => {
@@ -13,19 +13,19 @@ const ModalEditarClasse = ({ classe, onClose, onClasseEditada }) => {
     
         try {
             const response = await axios.put(
-                `http://localhost:5001/classes/${classe.classe_id}`,
+                `http://localhost:5001/subcategorias/${subcategoria.subcategoria_id}`,
                 {
-                    classe_nome: classeNome,
-                    classe_descricao: classeDescricao,
-                    classe_status: classe.classe_status || true, // Campo obrigatório
-                    subcategoria_id: classe.subcategoria_id // Campo obrigatório
+                    subcategoria_nome: subcategoriaNome,
+                    subcategoria_descricao: subcategoriaDescricao,
+                    subcategoria_status: subcategoria.subcategoria_status || true, // Campo obrigatório
+                    categoria_id: subcategoria.categoria_id // Campo obrigatório
                 }
             );
     
             // Use os dados retornados pelo back-end para garantir consistência
-            onClasseEditada(response.data); 
+            onSubcategoriaEditada(response.data); 
             onClose();
-        }// Front-end (ModalEditarClasse.jsx)
+        }// Front-end (ModalEditarSubcat jsx)
         catch (error) {
             console.error("Erro detalhado:", error.response?.data || error.message);
             
@@ -34,7 +34,7 @@ const ModalEditarClasse = ({ classe, onClose, onClasseEditada }) => {
                 error.response?.data?.message || // Para erros do Joi/PostgreSQL
                 error.response?.data?.error ||   // Para erros personalizados (ex: 404)
                 error.message ||                 // Erros de rede
-                "Erro ao editar classe.";
+                "Erro ao editar subcategoria.";
                 
             setErro(errorMessage); // 👈 Garante que é uma string
             onClose(); // Opcional: fecha o modal após erro
@@ -43,19 +43,19 @@ const ModalEditarClasse = ({ classe, onClose, onClasseEditada }) => {
     return (
         <div className="modal-overlay">
             <div className="modal-content">
-                <h2>Editar Classe</h2>
+                <h2>Editar subcategoria</h2>
                 {erro && <p className="error">{erro}</p>}
 
                 <form onSubmit={handleSubmit}>
                     <input
                         type="text"
-                        value={classeNome}
-                        onChange={(e) => setClasseNome(e.target.value)}
+                        value={subcategoriaNome}
+                        onChange={(e) => setsubcategoriaNome(e.target.value)}
                         required
                     />
                     <textarea
-                        value={classeDescricao}
-                        onChange={(e) => setClasseDescricao(e.target.value)}
+                        value={subcategoriaDescricao}
+                        onChange={(e) => setsubcategoriaDescricao(e.target.value)}
                         required
                     ></textarea>
                     <button type="submit" className="btn editar">Salvar</button>
@@ -108,4 +108,4 @@ const ModalEditarClasse = ({ classe, onClose, onClasseEditada }) => {
     );
 };
 
-export default ModalEditarClasse;
+export default ModalEditarSubcat 

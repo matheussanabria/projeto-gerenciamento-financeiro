@@ -63,6 +63,7 @@ const LinhaSubcategoria = ({ subcategoria }) => {
                     background: #dc3545;
                     color: white;
                 }
+                    
             `}</style>
         </>
     );

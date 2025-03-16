@@ -10,10 +10,30 @@ const classeSchema = Joi.object({
     subcategoria_id: Joi.number().optional()// Ou required()
 });
 
-// Listar classes com paginação
+// Listar classes com paginaoçã
+const listarClasses = async (req, res) => {
+    try {
+        const { page = 1, limit = 10 } = req.query;
+        const offset = (page - 1) * limit;
+        const query = `
+            SELECT * FROM classes
+            LIMIT $1 OFFSET $2;
 
+        `
+
+        const values = [limit, offset];
+
+        const result = await pool.query(query, values);
+
+    //     const values = [subcategoria_id, limit, offset];
+
+        res.status(200).json(result.rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
 // Listar classes com paginação
-const listarClasses = async (req, res, next) => {
+const listarClassesPaginacao = async (req, res, next) => {
     try {
         const { page = 1, limit = 10, subcategoria_id } = req.query;
         const offset = (page - 1) * limit;
@@ -43,6 +63,7 @@ const listarClasses = async (req, res, next) => {
     } catch (err) {
         next(err);
     }
+    
 };
 
 
@@ -50,7 +71,7 @@ const listarClasses = async (req, res, next) => {
 const obterClasse = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const query = `SELECT * FROM classes WHERE id = $1`;
+        const query = `SELECT * FROM classes WHERE classe_id = $1`;
         const result = await pool.query(query, [id]);
 
         if (result.rowCount === 0) {
@@ -92,11 +113,32 @@ const atualizarClasse = async (req, res, next) => {
         const { error } = classeSchema.validate(req.body);
         if (error) return res.status(400).json({ error: error.details[0].message });
 
-        const { classe_nome, classe_descricao, classe_status, subcategoria_id } = req.body;
+        const { 
+            classe_nome, 
+            classe_descricao, 
+            classe_status, 
+            subcategoria_id 
+        } = req.body;
+
         const { id } = req.params;
+    
         console.log("ID recebido:", id); // 👈 LOG 2
-        const query = `UPDATE subclasses SET subclasse_nome = $1, subclasse_descricao = $2, classe_id = $3 WHERE subclasse_id = $4 RETURNING *`;
-        const result = await pool.query(query, [classe_nome, classe_descricao, classe_status, subcategoria_id, id]);
+
+        const query = `
+            UPDATE classes 
+            SET 
+                classe_nome = $1, 
+                classe_descricao = $2,
+                classe_status = $3, 
+                subcategoria_id = $4 
+            WHERE classe_id = $5 
+            RETURNING *`;
+        const result = await pool.query(query, [
+            classe_nome,
+            classe_descricao, 
+            classe_status, 
+            subcategoria_id, 
+            id]);
         
         console.log("Resultado da query:", result.rows); // 👈 LOG 3
         if (result.rowCount === 0) {
@@ -129,6 +171,7 @@ const deletarClasse = async (req, res, next) => {
 
 module.exports = {
     listarClasses,
+    listarClassesPaginacao,
     obterClasse,
     criarClasse,
     atualizarClasse,

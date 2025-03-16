@@ -1,7 +1,7 @@
 // Importação correta com desestruturação
 import React, { useState, useEffect } from 'react';
 
-import Header from '../components/Header';
+import Header from '../components/Header/Header';
 // Componentes de UI para funcionalidades CRUD
 import ListarRemetentes from '../components/remetentes/ListarRemetentes';
 import BuscarRemetente from '../components/remetentes/BuscaRemetente';

@@ -25,6 +25,11 @@ const ListarCategorias = ({ onCategoriaSelecionada }) => {
                     {cat.categoria_nome}
                 </button>
             ))}
+            <div className="actions">
+                <button>Editar</button>
+                <button>Adicionar</button>
+
+            </div>
 
             <style jsx>{`
                 .abas {

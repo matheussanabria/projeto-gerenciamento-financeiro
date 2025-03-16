@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ModalAdicionarSubclasse from "../inserir/ModalAdicionarSublasse";  // Importe o ModalAdicionarSub
-import ModalEditarSubclasse from "../editar/ModalEditarSubclasse";  // Importe o ModalEditarClasse
+import ModalEditarSubclasse from "../Edit/ModalEditarSubclasse";  // Importe o ModalEditarClasse
 
 const ModalSubclasses = ({ classe, onClose }) => {
     const [subclasses, setSubclasses] = useState([]);
@@ -61,7 +61,7 @@ const ModalSubclasses = ({ classe, onClose }) => {
     return (
         <div className="modal-overlay">
             <div className="modal-content">
-                <h2>subClasses de {classe.classe_nome}</h2>
+                <h2>Subclasses de {classe.classe_nome}</h2>
                 <div className="listar-subclasses">
 
                     {subclasses.length === 0 ? (
@@ -91,7 +91,7 @@ const ModalSubclasses = ({ classe, onClose }) => {
                     )}
                 </div>
                     <div className="modal-footer">
-                        <button className="btn adicionar" onClick={handleCreateSubclass}>Adicionar Classe</button>
+                        <button className="btn adicionar" onClick={handleCreateSubclass}>Adicionar Subclasse</button>
                         <button className="btn fechar" onClick={onClose}>Fechar</button>
                         <button className="btn fechar-X" onClick={onClose}>X</button>
 

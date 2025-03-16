@@ -11,6 +11,11 @@ const Hierarquias = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  
+  const [isCreating, setIsCreating] = useState(false);  // Estado para controle do modal de criação
+  const [editingSubcat, setEditingSubcat] = useState(null);  // Estado para controle do modal de edição
+  
+
   useEffect(() => {
     axios.get("http://localhost:5001/categorias")
       .then(res => {
@@ -36,6 +41,16 @@ const Hierarquias = () => {
     sub => sub.categoria_id === categoriaAtiva?.categoria_id
   );
 
+  const handleDelete = async (subcategoriaId) => {
+    if (!window.confirm("Tem certeza que deseja excluir esta classe?")) return;
+
+    try {
+        await axios.delete(`http://localhost:5001/subcategoria/${subcategoriaId}`);
+        setSubcategorias(subcategorias.filter((sub) => sub.subcategoria_id !== subcategoriaId)); // Remove a classe da lista
+    } catch (error) {
+        setError("Erro ao excluir classe.");
+    }
+};
   const handleSelecionarSubcategoria = (subcategoria) => {
     setSubcategoriaAtiva(subcategoria); // Define a subcategoria ativa
     setModalAberto(true);
@@ -44,6 +59,25 @@ const Hierarquias = () => {
   const handleFecharModal = () => {
     setModalAberto(false);
     setSubcategoriaAtiva(null);
+  };
+
+  const handleCreateSubcat = () => {
+    setIsCreating(true); // Ativa o modal de criação de classe
+};
+
+const handleNovaSubcatCriada = (novaSubcat) => {
+    setSubcategorias([...subcategorias, novaSubcat]); // Adiciona a nova classe ao final da lista
+};
+
+  const handleEditSubcat = (subcategoria) => {
+    setEditingSubcat(subcategoria); // Ativa o modal de edição com a classe selecionada
+};
+
+    // Adicione esta função para atualizar a lista de classes após edição
+    const handleSubcatEditada = (subcatEditada) => {
+      setSubcategorias(subcategorias.map(sub => 
+          sub.subcategoria_id === subcatEditada.subcategoria_id ? subcatEditada : sub
+      ));
   };
 
   if (loading) return <div className="loading">Carregando...</div>;
@@ -83,7 +117,8 @@ const Hierarquias = () => {
                     <button className="btn visualizar" onClick={() => handleSelecionarSubcategoria(sub)}>
                         Ver Classes
                     </button>
-
+                    <button className="btn editar" onClick={() => handleEditSubcat(sub)}>Editar</button>
+                    <button className="btn excluir" onClick={() => handleDelete(sub.subcategoria_id)}>Excluir</button>
                   </td>
                 </tr>
               ))}
@@ -95,6 +130,21 @@ const Hierarquias = () => {
       {modalAberto && subcategoriaAtiva && (
         <ModalClasses subcategoria={subcategoriaAtiva} onClose={handleFecharModal} />
       )}
+
+        {/* Renderiza o modal de criação ou edição, dependendo do estado */}
+        {/* {isCreating && 
+            <ModalAdicionarSubcat 
+                categoria={categoriaAtiva} 
+                onClose={() => setIsCreating(false)} 
+                onSubcatAdicionada={handleNovaSubcatCriada}
+            />}
+        {editingSubcat && 
+            <ModalEditarSubcat 
+                classe={editingSubcat} 
+                onClose={() => setEditingSubcat(null)}
+                onSubcatEditada={handleSubcatEditada} // 👈 Adicione esta linha
+            />
+        } */}
 
       <style jsx>{`
         .container {
