@@ -15,7 +15,7 @@ export const TransactionList = ({
 
   // Filtra transações pelo ID da categoria
   const filteredTransactions = transactions.filter(
-    t => t.transacao_categoria_id === categoriaAtiva?.categoria_id
+    t => t.transacao_categoria_nome === categoriaAtiva?.categoria_nome
   );
 
   // Renderização condicional para segurança

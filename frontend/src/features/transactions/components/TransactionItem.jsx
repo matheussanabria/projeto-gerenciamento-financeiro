@@ -11,18 +11,20 @@ export const TransactionItem = ({ transaction, onDelete, onEdit }) => {
     return data.toLocaleDateString('pt-BR');
   };
 
+  console.log('Transações:', transaction);
+
   return (
     <tr>
       <td>{transaction.transacao_descricao}</td>
       <td>R$ {parseFloat(transaction.transacao_valor).toFixed(2)}</td>
       <td>{transaction.transacao_remetente_nome}</td>
-      <td>{transaction.transacao_metodo_pagamento}</td>
-      <td>{transaction.transacao_numero_parcelas}</td>
+      <td>{transaction.transacao_metodo_pagamento_descricao}</td>
+      <td>{transaction.transacao_parcelas}</td>
       <td>{transaction.transacao_conta_nome}</td>
       <td>{transaction.transacao_subcategoria_nome}</td>
       <td>{transaction.transacao_classe_nome}</td>
       <td>{transaction.transacao_subclasse_nome}</td>
-      <td>{formatarData(transaction.transacao_data)}</td>
+      <td>{formatarData(transaction.transacao_data_lancamento)}</td>
       <td>
         <Button variant="danger" onClick={() => onDelete(transaction.transacao_id)}>
           <FontAwesomeIcon icon={faTrashCan} />
