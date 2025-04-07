@@ -190,19 +190,24 @@
 // };
 const TransacaoModel = require('../models/transacaoModel');
 
+// transacoesController.js (método createTransacao)
 exports.createTransacao = async (req, res) => {
   try {
+    console.log('Dados recebidos:', req.body); // ✅ Log de diagnóstico
     const novaTransacao = await TransacaoModel.create(req.body);
     res.status(201).json({ message: 'Transação criada com sucesso!', transacao: novaTransacao });
   } catch (err) {
+    console.error('Erro no servidor:', err); // ✅ Log completo
     res.status(500).json({ message: 'Erro ao criar transação', error: err.message });
   }
 };
 
 exports.getTransacoes = async (req, res) => {
   try {
-    const transacoes = await TransacaoModel.getAll();
-    res.status(200).json(transacoes);
+    //                 aguarde ModeloTransacao chamada para funcao obterTudo
+    const transacoes = await TransacaoModel.getAll(); //chama a funcao obterTudo do objeto Modelo Transacao
+    res.status(200).json(transacoes);// parametro res chamada pra funcao estado(200 | Bem sucedido) chamada para funcao json usando como parametro a const transacao
+    // resposta bem sucedida e transacoes em formato json 
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

@@ -3,8 +3,9 @@ const Joi = require('joi');
 
 // Validação com Joi
 const subcategoriaSchema = Joi.object({
-    nome: Joi.string().min(3).required(),
-    descricao: Joi.string().optional(),
+    subcategoria_nome: Joi.string().min(3).required(),
+    subcategoria_descricao: Joi.string().optional(),
+    subcategoria_status: Joi.boolean().optional(),
     categoria_id: Joi.number().integer().required(),
 });
 
@@ -77,11 +78,26 @@ const atualizarSubcategoria = async (req, res, next) => {
     try {
         const { error } = subcategoriaSchema.validate(req.body);
         if (error) return res.status(400).json({ error: error.details[0].message });
+        
+        const { id } = req.params;
 
-        const { subcategoria_nome, categoria_id } = req.body;
-        const { subcategoria_id } = req.params;
-        const query = `UPDATE subcategorias SET subcategoria_nome = $1, categoria_id = $2 WHERE subcategoria_id = $3 RETURNING *`;
-        const result = await pool.query(query, [subcategoria_nome, categoria_id, subcategoria_id]);
+        const values = [
+            subcategoria_nome, 
+            subcategoria_descricao, 
+            subcategoria_status, 
+            categoria_id
+        ]
+
+        const query = `
+            UPDATE subcategorias 
+            SET 
+                subcategoria_nome = $1,
+                subcategoria_descricao= $2,
+                subcategoria_status = $3,
+                categoria_id = $4 
+            WHERE subcategoria_id = $5 RETURNING *`;
+        
+        const result = await pool.query(query, [values, id]);
 
         if (result.rowCount === 0) {
             return res.status(404).json({ error: 'Subcategoria não encontrada' });

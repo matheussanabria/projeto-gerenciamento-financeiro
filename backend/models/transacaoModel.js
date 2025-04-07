@@ -39,7 +39,7 @@ const TransacaoModel = {
     ];
     
     const result = await db.query(query, values);
-    return result.transacao_rows[0];
+    return result.rows[0]; // ✅
   },
 
   // Obter todas as transações
@@ -87,33 +87,69 @@ const TransacaoModel = {
   async getById(transacao_id) {
     const query = `SELECT * FROM transacoes WHERE transacao_id = $1`;
     const result = await db.query(query, [transacao_id]);
-    return result.transacao_rows[0] || null;
+    return result.rows[0] || null;
   },
 
   // Obter transações por remetente
   async getByRemetente(transacao_remetente_id) {
     const query = `SELECT * FROM transacoes WHERE transacao_remetente_id = $1`;
     const result = await db.query(query, [transacao_remetente_id]);
-    return result.transacao_rows;
+    return result.rows;
   },
 
   // Atualizar uma transação
-  async update(transacao_id, { transacao_descricao, transacao_valor, transacao_data }) {
+  async update(transacao_id, {
+    transacao_descricao,
+    transacao_valor,
+    transacao_remetente_id,
+    transacao_metodo_pagamento_id,
+    transacao_forma_parcelamento_id,
+    transacao_conta_id,
+    transacao_categoria_id,
+    transacao_subcategoria_id,
+    transacao_classe_id,
+    transacao_subclasse_id,
+    transacao_data_lancamento
+  }) {
     const query = `
       UPDATE transacoes 
-      SET transacao_descricao = $1, transacao_valor = $2, transacao_data = $3
-      WHERE transacao_id = $4 
+      SET transacao_descricao = $1, 
+          transacao_valor = $2,
+          transacao_remetente_id = $3,
+          transacao_metodo_pagamento_id = $4,
+          transacao_forma_parcelamento_id = $5,
+          transacao_conta_id = $6,
+          transacao_categoria_id = $7,
+          transacao_subcategoria_id = $8,
+          transacao_classe_id = $9,
+          transacao_subclasse_id = $10,
+          transacao_data_lancamento = $11
+      WHERE transacao_id = $12 
       RETURNING *`;
+
+      const values = [
+        transacao_descricao,
+        transacao_valor,
+        transacao_remetente_id,
+        transacao_metodo_pagamento_id,
+        transacao_forma_parcelamento_id,
+        transacao_conta_id,
+        transacao_categoria_id,
+        transacao_subcategoria_id,
+        transacao_classe_id,
+        transacao_subclasse_id,
+        transacao_data_lancamento
+      ];
     
-    const result = await db.query(query, [transacao_descricao, transacao_valor, transacao_data_lancamento, transacao_id]);
-    return result.transacao_rows[0] || null;
+    const result = await db.query(query, [values, transacao_id]);
+    return result.rows[0] || null;
   },
 
   // Excluir uma transação
   async delete(transacao_id) {
     const query = `DELETE FROM transacoes WHERE transacao_id = $1 RETURNING *`;
     const result = await db.query(query, [transacao_id]);
-    return result.transacao_rows[0] || null;
+    return result.rows[0] || null;
   },
 };
 

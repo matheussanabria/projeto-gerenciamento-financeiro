@@ -37,6 +37,7 @@ app.use(express.json());
 // Definindo as rotas
 // Definir rotas para transações
 app.use("/auth", authRoutes);
+
 app.use('/transacoes', transacoesRoutes);
 app.use('/remetentes', remetentesRoutes);
 app.use('/metodos-pagamento', metodosPagamentoRoutes);
@@ -55,5 +56,15 @@ app.use(errorHandler);  // Middleware deve ser uma função
 // Definindo a porta do servidor
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`api para transacoes http://localhost:${PORT}/transacoes`);
+    console.log(`api para remetentes http://localhost:${PORT}/remetentes`);
+    console.log(`api para metodos de pagamento http://localhost:${PORT}/metodos-pagamento`);
+    console.log(`api para formas de pagamento http://localhost:${PORT}/formas-pagamento`);
+    console.log(`api para formas de parcelamento http://localhost:${PORT}/formas-parcelamento`);
+    console.log(`api para contas http://localhost:${PORT}/contas`);
+    console.log(`api para categorias http://localhost:${PORT}/categorias`);
+    console.log(`api para subcategorias http://localhost:${PORT}/subcategorias`);
+    console.log(`api para classes http://localhost:${PORT}/classes`);
+    console.log(`api para subclasses http://localhost:${PORT}/subclasses`);
+    console.log(`Server running on http://localhost:${PORT}`);
 });

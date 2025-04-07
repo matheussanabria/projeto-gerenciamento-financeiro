@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import ModalAdicionarSubclasse from "../inserir/ModalAdicionarSublasse";  // Importe o ModalAdicionarSub
-import ModalEditarSubclasse from "../Edit/ModalEditarSubclasse";  // Importe o ModalEditarClasse
+import ModalAdicionarSubclasse from "../../inserir/ModalAdicionarSublasse";  // Importe o ModalAdicionarSub
+import ModalEditarSubclasse from "../../Edit/ModalEditarSubclasse";  // Importe o ModalEditarClasse
 
 const ModalSubclasses = ({ classe, onClose }) => {
     const [subclasses, setSubclasses] = useState([]);
@@ -13,7 +13,7 @@ const ModalSubclasses = ({ classe, onClose }) => {
     useEffect(() => {
         if (classe) {
             setLoading(true);
-            axios.get(`http://localhost:5001/subclasses?classe_id=${classe.classe_id}`)
+            axios.get(`http://localhost:5001/subclasses/paginacao?classe_id=${classe.classe_id}`)
                 .then(res => {
                     setSubclasses(res.data);
                     setLoading(false);

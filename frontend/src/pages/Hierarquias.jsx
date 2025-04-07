@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import ModalClasses from "../components/listar/ModalClasses";
+import ModalClasses from "../components/listar/classes/ModalClasses";
 
 const Hierarquias = () => {
   const [categorias, setCategorias] = useState([]);

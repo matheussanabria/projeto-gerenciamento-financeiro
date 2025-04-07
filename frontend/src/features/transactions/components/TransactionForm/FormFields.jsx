@@ -1,11 +1,23 @@
+// frontend/src/features/transactions/components/TransactionForm/FormField.jsx
+// Importing React and react-bootstrap/Form
 import React from 'react';
 import { Form } from 'react-bootstrap';
 
-export const FormFields = ({ 
-  lookups, 
-  formData, 
-  handleChange 
-}) => (
+// Defining the FormFields component
+export const FormFields = ({
+  // Properties passed to the component
+  currentCategory, // Current category selected
+  lookups, // Lookup data for dropdowns
+  formData, // Form data object
+  handleChange // Function to handle form changes
+}) => {
+  // Logging messages to the console
+  console.log('Inicio lógica FormFields');
+  console.log('Current category:', currentCategory);
+  console.log('Fim lógica FormFields');
+
+  // Returning the JSX elements that make up the component
+  return (
   <>
     {/* Campos Obrigatórios */}
     <Form.Group className="mb-3" controlId="transacao_descricao">
@@ -43,7 +55,7 @@ export const FormFields = ({
         {lookups.remetentes?.map(remetente => (
           <option 
             key={remetente.remetente_id} 
-            value={remetente.remetente_nome}
+            value={remetente.remetente_id}
           >
             {remetente.remetente_nome}
           </option>
@@ -54,7 +66,7 @@ export const FormFields = ({
     <Form.Group className="mb-3" controlId="transacao_metodo_pagamento">
       <Form.Label>Método de Pagamento</Form.Label>
       <Form.Select
-        name="transacao_metodo_pagamento"
+        name="transacao_metodo_pagamento_id"
         value={formData.transacao_metodo_pagamento_id}
         onChange={handleChange}
       >
@@ -62,7 +74,7 @@ export const FormFields = ({
         {lookups.metodosPagamento?.map(metodo => (
           <option 
             key={metodo.metodo_pagamento_id} 
-            value={metodo.metodo_pagamento_descricao}
+            value={metodo.metodo_pagamento_id}
           >
             {metodo.metodo_pagamento_descricao}
           </option>
@@ -81,7 +93,7 @@ export const FormFields = ({
         {lookups.formasParcelamento?.map(parcela => (
           <option 
             key={parcela.forma_parcelamento_id} 
-            value={parcela.forma_parcelamento_numero_parcelas}
+            value={parcela.forma_parcelamento_id}
           >
             {parcela.forma_parcelamento_numero_parcelas} parcelas
           </option>
@@ -100,7 +112,7 @@ export const FormFields = ({
         {lookups.contas?.map(conta => (
           <option 
             key={conta.conta_id} 
-            value={conta.conta_nome}
+            value={conta.conta_id}
           >
             {conta.conta_nome}
           </option>
@@ -109,23 +121,29 @@ export const FormFields = ({
     </Form.Group>
 
     <Form.Group className="mb-3" controlId="transacao_categoria_id">
-      <Form.Label>Categoria</Form.Label>
-      <Form.Select
-        name="transacao_categoria_id"
-        value={formData.transacao_categoria_id}
-        onChange={handleChange}
-      >
+  <Form.Label>Categoria</Form.Label>
+  <Form.Select
+    name="transacao_categoria_id"
+    value={formData.transacao_categoria_id}
+    onChange={handleChange}
+    disabled={!!currentCategory} // Desabilita se categoria veio da aba
+  >
+    {currentCategory ? (
+      <option value={currentCategory.categoria_id}>
+        {currentCategory.categoria_nome}
+      </option>
+    ) : (
+      <>
         <option value="">Selecione a categoria</option>
         {lookups.categorias?.map(categoria => (
-          <option 
-            key={categoria.categoria_id} 
-            value={categoria.categoria_nome}
-          >
+          <option key={categoria.categoria_id} value={categoria.categoria_id}>
             {categoria.categoria_nome}
           </option>
         ))}
-      </Form.Select>
-    </Form.Group>
+      </>
+    )}
+  </Form.Select>
+</Form.Group>
 
     <Form.Group className="mb-3" controlId="transacao_subcategoria_id">
       <Form.Label>Subcategoria</Form.Label>
@@ -138,7 +156,7 @@ export const FormFields = ({
         {lookups.subcategorias?.map(sub => (
           <option 
             key={sub.subcategoria_id} 
-            value={sub.subcategoria_nome}
+            value={sub.subcategoria_id}
           >
             {sub.subcategoria_nome}
           </option>
@@ -157,7 +175,7 @@ export const FormFields = ({
         {lookups.classes?.map(classe => (
           <option 
             key={classe.classe_id} 
-            value={classe.classe_nome}
+            value={classe.classe_id}
           >
             {classe.classe_nome}
           </option>
@@ -176,7 +194,7 @@ export const FormFields = ({
         {lookups.subclasses?.map(subclasse => (
           <option 
             key={subclasse.subclasse_id} 
-            value={subclasse.subclasse_nome}
+            value={subclasse.subclasse_id}
           >
             {subclasse.subclasse_nome}
           </option>
@@ -195,3 +213,4 @@ export const FormFields = ({
     </Form.Group>
   </>
 );
+};

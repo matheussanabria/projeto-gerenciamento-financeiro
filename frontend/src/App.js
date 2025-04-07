@@ -24,7 +24,7 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import Home from "./pages/Home";
-import Transacoes from "./pages/Transacoes";
+import Transacoes from "./pages/TransactionsPage";
 // import Contas from "./pages/Contas";
 // import Cartoes from "./pages/Cartoes";
 // import Pagamentos from "./pages/Pagamentos";

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import ModalSubclasses from "./ModalSubclasses"; // Próximo componente que criaremos
-import ModalAdicionarClasse from "../inserir/ModalAdicionarClasse";  // Importe o ModalAdicionarClasse
-import ModalEditarClasse from "../Edit/ModalEditarClasse";  // Importe o ModalEditarClasse
+import ModalSubclasses from "../subclasses/ModalSubclasses"; // Próximo componente que criaremos
+import ModalAdicionarClasse from "../../inserir/ModalAdicionarClasse";  // Importe o ModalAdicionarClasse
+import ModalEditarClasse from "../../Edit/ModalEditarClasse";  // Importe o ModalEditarClasse
 
 const ModalClasses = ({ subcategoria, classe, onClose }) => {
     const [modalAberto, setModalAberto] = useState(false);

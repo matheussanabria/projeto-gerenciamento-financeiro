@@ -1,71 +1,134 @@
+//javascript backend/controllers/metodosPagamentoController.js
 const db = require('../config/db');
 
-// Criar um novo método de pagamento
+// Error handling middleware
+const errorHandler = (err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ error: err.message });
+};
+
+// CRUD operations
 exports.createMetodoPagamento = async (req, res) => {
-    const { nome, descricao } = req.body;
-    try {
-        const result = await db.query(
-            'INSERT INTO metodos_pagamento (nome, descricao) VALUES ($1, $2) RETURNING *',
-            [nome, descricao]
-        );
-        res.status(201).json(result.rows[0]);
-    } catch (err) {
-        res.status(400).json({ error: err.message });
-    }
+  try {
+    const { forma_pagamento_id, bandeira_id, metodo_pagamento_descricao, metodo_pagamento_ativo, permite_parcelamento } = req.body;
+    const result = await db.query(
+      `INSERT INTO metodos_pagamento (
+        forma_pagamento_id,
+        bandeira_id,
+        metodo_pagamento_descricao,
+        metodo_pagamento_ativo,
+        permite_parcelamento,
+        metodo_pagamento_created_at
+      ) VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP) 
+      RETURNING *`,
+      [
+        forma_pagamento_id,
+        bandeira_id,
+        metodo_pagamento_descricao,
+        metodo_pagamento_ativo,
+        permite_parcelamento
+      ]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    return errorHandler(err, req, res);
+  }
 };
 
-// Obter todos os métodos de pagamento
 exports.getMetodosPagamento = async (req, res) => {
-    try {
-        const result = await db.query('SELECT * FROM metodos_pagamento');
-        res.status(200).json(result.rows);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+  try {
+    const result = await db.query('SELECT * FROM metodos_pagamento');
+    res.status(200).json(result.rows);
+  } catch (err) {
+    return errorHandler(err, req, res);
+  }
 };
 
-// Obter um método de pagamento pelo ID
 exports.getMetodoPagamentoById = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const result = await db.query('SELECT * FROM metodos_pagamento WHERE id = $1', [id]);
-        if (result.rows.length === 0) {
-            return res.status(404).json({ message: 'Método de pagamento não encontrado' });
-        }
-        res.status(200).json(result.rows[0]);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+  const { id } = req.params;
+  try {
+    const result = await db.query(
+      'SELECT * FROM metodos_pagamento WHERE metodo_pagamento_id = $1',
+      [id]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Método não encontrado' });
     }
+    res.status(200).json(result.rows[0]);
+  } catch (err) {
+    return errorHandler(err, req, res);
+  }
 };
 
-// Atualizar um método de pagamento
 exports.updateMetodoPagamento = async (req, res) => {
-    const { id } = req.params;
-    const { nome, descricao } = req.body;
-    try {
-        const result = await db.query(
-            'UPDATE metodos_pagamento SET nome = $1, descricao = $2 WHERE id = $3 RETURNING *',
-            [nome, descricao, id]
-        );
-        if (result.rows.length === 0) {
-            return res.status(404).json({ message: 'Método de pagamento não encontrado' });
-        }
-        res.status(200).json(result.rows[0]);
-    } catch (err) {
-        res.status(400).json({ error: err.message });
+  const { id } = req.params;
+  const { forma_pagamento_id, bandeira_id, metodo_pagamento_descricao, metodo_pagamento_ativo, permite_parcelamento } = req.body;
+  try {
+    const result = await db.query(
+      `UPDATE metodos_pagamento SET
+        forma_pagamento_id = $1,
+        bandeira_id = $2,
+        metodo_pagamento_descricao = $3,
+        metodo_pagamento_ativo = $4,
+        permite_parcelamento = $5
+      WHERE metodo_pagamento_id = $6
+      RETURNING *`,
+      [
+        forma_pagamento_id,
+        bandeira_id,
+        metodo_pagamento_descricao,
+        metodo_pagamento_ativo,
+        permite_parcelamento,
+        id
+      ]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Método não encontrado' });
     }
+    res.status(200).json(result.rows[0]);
+  } catch (err) {
+    return errorHandler(err, req, res);
+  }
 };
 
-// Deletar um método de pagamento
 exports.deleteMetodoPagamento = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const result = await db.query('DELETE FROM metodos_pagamento WHERE id = $1 RETURNING *', [id]);
-        if (result.rows.length === 0) {
-            return res.status(404).json({ message: 'Método de pagamento não encontrado' });
-        }
-        res.status(204).send();
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+  const { id } = req.params;
+  try {
+    const result = await db.query(
+      'DELETE FROM metodos_pagamento WHERE metodo_pagamento_id = $1 RETURNING *',
+      [id]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Método não encontrado' });
     }
+    res.status(204).send();
+  } catch (err) {
+    return errorHandler(err, req, res);
+  }
+};
+
+// View-related logic
+exports.getViewMetodosPagamento = async (req, res) => {
+  try {
+    const result = await db.query('SELECT * FROM view_metodos_pagamento');
+    res.status(200).json(result.rows);
+  } catch (err) {
+    return errorHandler(err, req, res);
+  }
+};
+
+exports.getViewMetodoPagamentoById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await db.query(
+      'SELECT * FROM view_metodos_pagamento WHERE metodo_pagamento_id = $1',
+      [id]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Método não encontrado' });
+    }
+    res.status(200).json(result.rows[0]);
+  } catch (err) {
+    return errorHandler(err, req, res);
+  }
 };

@@ -17,7 +17,7 @@ exports.createFormaParcelamento = async (req, res) => {
 // Obter todos os métodos de pagamento
 exports.getFormaParcelamentos = async (req, res) => {
     try {
-        const result = await db.query('SELECT * FROM formas_parcelamento');
+        const result = await db.query('SELECT * FROM formas_parcelamento ORDER BY forma_parcelamento_id DESC;');
         res.status(200).json(result.rows);
     } catch (err) {
         res.status(500).json({ error: err.message });

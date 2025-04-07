@@ -48,7 +48,7 @@ const listarClassesPaginacao = async (req, res, next) => {
                 cl.classe_id, 
                 cl.classe_nome,
                 cl.classe_descricao,
-                cl.subcategoria_id, 
+                 cl.subcategoria_id, 
                 sc.subcategoria_nome 
             FROM classes cl
             JOIN subcategorias sc ON cl.subcategoria_id = sc.subcategoria_id
@@ -168,6 +168,7 @@ const deletarClasse = async (req, res, next) => {
         next(err);
     }
 };
+
 
 module.exports = {
     listarClasses,

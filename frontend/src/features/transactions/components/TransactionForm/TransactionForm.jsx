@@ -1,24 +1,30 @@
-import React, { useState } from 'react';
+// frontend/src/features/transactions/components/TransactionForm/index.jsx
+import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap'; // Adicionei Form aqui
 import { FormFields } from './FormFields';
 
 export const TransactionForm = ({ 
+  currentCategory, // <--- Add this prop
   show, 
   onHide, 
   lookups, 
-  onSubmit 
+  onSubmit
+
 }) => {
+  console.log('Inicio lógica TransactionForm')
+  console.log('Current category:', currentCategory);
+
   const [formData, setFormData] = useState({
     transacao_descricao: '',
     transacao_valor: '',
-    transacao_remetente_id: '',
-    transacao_metodo_pagamento_id: '',
-    transacao_forma_parcelamento_id: '',
-    transacao_conta_id: '',
-    transacao_categoria_id: '',
-    transacao_subcategoria_id: '',
-    transacao_classe_id: '',
-    transacao_subclasse_id: '',
+    transacao_remetente_id: null,
+    transacao_metodo_pagamento_id: null,
+    transacao_forma_parcelamento_id: null,
+    transacao_conta_id: null,
+    transacao_categoria_id: currentCategory?.categoria_id || null,
+    transacao_subcategoria_id: null,
+    transacao_classe_id: null,
+    transacao_subclasse_id: null,
     transacao_data_lancamento: ''
   });
 
@@ -31,12 +37,22 @@ export const TransactionForm = ({
       return;
     }
     
+    
     onSubmit({
       ...formData,
       transacao_valor: parseFloat(formData.transacao_valor) // Converter para número
     });
   };
 
+  // Resetar o estado quando a categoria mudar
+  useEffect(() => {
+    setFormData(prev => ({
+      ...prev,
+      transacao_categoria_id: currentCategory?.categoria_id || null
+    }));
+  }, [currentCategory]);
+
+  console.log('Fim lógica TransactionForm')
   return (
     <Modal show={show} onHide={onHide} size="lg">
       <Modal.Header closeButton>
@@ -47,6 +63,7 @@ export const TransactionForm = ({
           <FormFields 
             lookups={lookups} 
             formData={formData} 
+            currentCategory={currentCategory}
             handleChange={(e) => setFormData(prev => ({
               ...prev,
               [e.target.name]: e.target.value

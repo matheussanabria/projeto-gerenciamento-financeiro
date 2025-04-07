@@ -1,36 +1,48 @@
 import React, { useState } from "react";
-import ModalSubclasses from "./ModalSubclasses"; // Próximo componente que criaremos
+import ModalClasses from "../classes/ModalClasses"; // Próximo componente que criaremos
 
-const LinhaClasse = ({ classe }) => {
+const LinhaSubcategoria = ({ subcategoria }) => {
     const [modalAberto, setModalAberto] = useState(false);
 
     const handleAbrirModal = () => setModalAberto(true);
     const handleFecharModal = () => setModalAberto(false);
 
+    const handleEditar = () => {
+        console.log(`Editar subcategoria: ${subcategoria.subcategoria_nome}`);
+    };
+
     const handleExcluir = () => {
-        const confirmar = window.confirm(`Deseja excluir a classe "${classe.classe_nome}"?`);
+        const confirmar = window.confirm(`Deseja excluir a subcategoria "${subcategoria.subcategoria_nome}"?`);
         if (confirmar) {
-            console.log(`Classe ${classe.classe_nome} excluída.`);
+            console.log(`Subcategoria ${subcategoria.subcategoria_nome} excluída.`);
         }
     };
 
     return (
         <>
             <tr>
-                <td>{classe.classe_nome}</td>
+                <td>{subcategoria.subcategoria_nome}</td>
                 <td>
                     <button className="btn visualizar" onClick={handleAbrirModal}>
-                        Ver Subclasses
+                        Ver Classes
                     </button>
                 </td>
                 <td>
+                    <button className="btn editar" onClick={handleEditar}>✏️</button>
                     <button className="btn excluir" onClick={handleExcluir}>🗑️</button>
                 </td>
             </tr>
 
-            {modalAberto && <ModalSubclasses classe={classe} onClose={handleFecharModal} />}
+            {modalAberto && <ModalClasses subcategoria={subcategoria} onClose={handleFecharModal} />}
 
             <style jsx>{`
+
+            thead{
+                background-color: #8080804f;
+            }
+            tr:hover{
+                background-color: #8080804f;
+            }
                 .btn {
                     padding: 5px 10px;
                     margin: 2px;
@@ -43,13 +55,18 @@ const LinhaClasse = ({ classe }) => {
                     background: #17a2b8;
                     color: white;
                 }
+                .editar {
+                    background: #ffc107;
+                    color: black;
+                }
                 .excluir {
                     background: #dc3545;
                     color: white;
                 }
+                    
             `}</style>
         </>
     );
 };
 
-export default LinhaClasse;
+export default LinhaSubcategoria;

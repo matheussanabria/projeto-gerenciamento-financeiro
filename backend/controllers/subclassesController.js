@@ -76,6 +76,23 @@ const listarSubclassesPaginacao = async (req, res, next) => {
     }
 };
 
+// Obter uma classe por ID
+const obterSubclasse = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const query = `SELECT * FROM subclasses WHERE subclasse_id = $1`;
+        const result = await pool.query(query, [id]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Subclasse não encontrada' });
+        }
+
+        res.json(result.rows[0]);
+    } catch (err) {
+        next(err);
+    }
+};
+
 // Criar nova subclasse
 const criarSubclasse = async (req, res, next) => {
     try {
@@ -151,6 +168,7 @@ const deletarSubclasse = async (req, res, next) => {
 module.exports = {
     listarSubclasses,
     listarSubclassesPaginacao,
+    obterSubclasse,
     criarSubclasse,
     atualizarSubclasse,
     deletarSubclasse,
